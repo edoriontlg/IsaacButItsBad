@@ -1,6 +1,7 @@
 package libraries;
 
 import resources.HeroInfos;
+import resources.DisplaySettings;
 
 public class Physics
 {
@@ -26,19 +27,39 @@ public class Physics
 		boolean tooFarAbove = pos1.getY() - (size1.getY() / 2) + HeroInfos.AUTHORIZED_OVERLAP > pos2.getY() + (size2.getY() / 2);
 
 
-		/*
-		if (DisplaySettings.IS_DEBUG_MODE) {
+		
+		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.rectangle(pos1.getX(), pos1.getY(),  size1.getX(),  size1.getY());
 			StdDraw.setPenColor(StdDraw.BLUE);
-			StdDraw.rectangle(pos1.getX(), pos1.getY(),  size1.getX(),  size1.getY());
+			StdDraw.rectangle(pos2.getX(), pos2.getY(),  size2.getX(),  size2.getY());
 		}
-		*/
+		
 		
 		if (tooFarLeft || tooFarRight || tooFarAbove || tooFarBelow)
 		{
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Calculates whether two circles are in collision or not.
+	 * 
+	 * @param pos1:  position of first circle
+	 * @param size1: size of first circle
+	 * @param pos2:  position of second circle
+	 * @param size2: size of second circle
+	 * @return true if circles are in collision else false
+	 */
+	public static boolean circleCollision(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
+	{
+		if (DisplaySettings.DRAW_DEBUG_INFO) {
+			StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.circle(pos1.getX(), pos1.getY(), size1.euclidianNorm());
+			StdDraw.setPenColor(StdDraw.BLUE);
+			StdDraw.circle(pos2.getX(), pos2.getY(), size2.euclidianNorm());
+		}
+		return pos1.distance(pos2) > size1.euclidianNorm() + size2.euclidianNorm() + HeroInfos.AUTHORIZED_OVERLAP;
 	}
 }

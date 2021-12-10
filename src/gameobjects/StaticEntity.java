@@ -13,7 +13,7 @@ public class StaticEntity {
 		StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
 				0);
 
-		if (DisplaySettings.IS_DEBUG_MODE) {
+		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.rectangle(getPosition().getX(), getPosition().getY(),  getSize().getX() / 2d,  getSize().getY() / 2d);
 		}
