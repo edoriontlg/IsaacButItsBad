@@ -1,8 +1,6 @@
 package libraries;
 
-import resources.DisplaySettings;
 import resources.HeroInfos;
-import resources.RoomInfos;
 
 public class Physics
 {

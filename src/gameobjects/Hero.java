@@ -1,9 +1,14 @@
 package gameobjects;
 
 import libraries.StdDraw;
+
+import java.io.Console;
+
 import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
+import resources.HeroInfos;
+
 public class Hero
 {
 	private Vector2 position;
@@ -13,6 +18,7 @@ public class Hero
 	private Vector2 direction;
 
 	private Vector2 lastPosition = position;
+	private Vector2 lastDirection = direction;
 
 
 	public Hero(Vector2 position, Vector2 size, double speed, String imagePath)
@@ -34,25 +40,30 @@ public class Hero
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
 		lastPosition = getPosition();
+		lastDirection = normalizedDirection;
 		setPosition(positionAfterMoving);
 		direction = new Vector2();
 	}
 
 	public void processPhysics(StaticEntity[] entitiesToCollide) {
+		//We get the current pos
 		Vector2 newPos = getPosition();
-		if (position.getX() > 1d) {
-			newPos.setX(1d);
-		} else if (position.getX() < 0d) {
-			newPos.setX(0d);
+
+		//We check if it's valid (top and bottom) and if not we correct it
+		if (getPosition().getX() + (getSize().getX() / 2) > 1d) {
+			newPos.setX(1d - (getSize().getX() / 2));
+		} else if (getPosition().getX() - (getSize().getX() / 2) < 0d) {
+			newPos.setX(0d + (getSize().getX() / 2));
 		}
 		
-		if (position.getY() > 1d) {
-			newPos.setY(1d);
-		} else if (position.getY() < 0d) {
-			newPos.setY(0d);
+		//We check if it's valid (left and right) and if not we correct it
+		if (getPosition().getY() + (getSize().getX() / 2) > 1d) {
+			newPos.setY(1d - (getSize().getX() / 2));
+		} else if (getPosition().getY() - (getSize().getX() / 2) < 0d) {
+			newPos.setY(0d + (getSize().getX() / 2));
 		}
 		
-		boolean makeMove = true;
+		boolean isMoveValid = true;
 		for (StaticEntity entity : entitiesToCollide) {
 			/*
 			if (Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(), entity.getSize())) {
@@ -71,9 +82,32 @@ public class Hero
 			
 			}	*/
 
-			makeMove = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(), entity.getSize());
-			if (!makeMove) {
-				setPosition(lastPosition);
+			isMoveValid = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(), entity.getSize());
+			if (!isMoveValid) {
+				//We get the last movement direction we got
+				Vector2 lastMove = lastDirection;
+
+				//Check both X and Y positions after move individually
+				Vector2 posAfterX = lastPosition;
+				posAfterX.addX(lastMove.getX());
+				Vector2 posAfterY = lastPosition;
+				posAfterY.addY(lastMove.getY());
+
+				
+				Vector2 correctedMove = new Vector2(0, 0);
+				System.out.println(posAfterX);
+				System.out.println(posAfterY);
+				if(!Physics.rectangleCollision(posAfterX, getSize(), entity.getPosition(), entity.getSize())) {
+					correctedMove.addX(lastMove.getX());
+				}
+
+				if(!Physics.rectangleCollision(posAfterY, getSize(), entity.getPosition(), entity.getSize())) {
+					correctedMove.addY(lastMove.getY());
+				}
+
+				Vector2 correctedPosition = lastPosition;
+				setPosition(correctedPosition.addVector(correctedMove));
+				
 				break;
 			}
 		}
