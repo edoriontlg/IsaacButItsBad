@@ -28,7 +28,6 @@ public class Room
 		StaticEntities[1] = se2;
 		StaticEntities[2] = se3;
 		StaticEntities[3] = se4;
-		System.out.println("");
 	}
 
 

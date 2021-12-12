@@ -8,6 +8,7 @@ import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
 import resources.HeroInfos;
+import resources.ImagePaths;
 
 public class Hero {
 	private Vector2 position;
@@ -15,16 +16,20 @@ public class Hero {
 	private String imagePath;
 	private double speed;
 	private Vector2 direction;
+	private double life;
+	private String coeur;
+	private String demiCoeur;
 
 	private Vector2 lastPosition;
 	private Vector2 lastNormalizedDirection;
 
-	public Hero(Vector2 position, Vector2 size, double speed, String imagePath) {
+	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, double life) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
 		this.imagePath = imagePath;
 		this.direction = new Vector2();
+		this.life = life;
 	}
 
 	public void updateGameObject() {
@@ -132,7 +137,25 @@ public class Hero {
 					getPosition().getX() + getPosition().subVector(lastPosition).getX(),
 					getPosition().getY() + getPosition().subVector(lastPosition).getY());
 		}
-	}
+
+		
+			coeur = ImagePaths.HEART_HUD;
+			demiCoeur = ImagePaths.HALF_HEART_HUD;
+			if(this.life == 0.5){
+				StdDraw.picture(0.05, 0.95, demiCoeur);
+			}
+			for(double i = 0; i < 0.05*(this.life-0.5); i+=0.05){
+				StdDraw.picture(0.05+i, 0.95, coeur);
+			}
+			if(this.life-(this.life-0.5) < 1.0){
+				StdDraw.picture(0.05*(this.life+0.5), 0.95, demiCoeur);
+			}
+
+		}
+		
+			
+		
+	
 
 	/*
 	 * Moving from key inputs. Direction vector is later normalised.
