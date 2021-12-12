@@ -68,14 +68,12 @@ public class Hero {
 				if (!Physics.rectangleCollision(lastPosition.addVector(lastXMovement), getSize(), entity.getPosition(),
 						entity.getSize())) {
 					correctedMovement = correctedMovement.addVector(lastXMovement);
-					System.out.println("X movement incorrect");
 				}
 
 				// Same for Y
 				if (!Physics.rectangleCollision(lastPosition.addVector(lastYMovement), getSize(), entity.getPosition(),
 						entity.getSize())) {
 					correctedMovement = correctedMovement.addVector(lastYMovement);
-					System.out.println("Y movement incorrect");
 				}
 
 				// We correct the last position
