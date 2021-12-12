@@ -15,6 +15,7 @@ public class StaticEntity {
 
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.setPenRadius(0.002);
 			StdDraw.rectangle(getPosition().getX(), getPosition().getY(),  getSize().getX() / 2d,  getSize().getY() / 2d);
 		}
 

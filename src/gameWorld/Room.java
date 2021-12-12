@@ -12,18 +12,20 @@ public class Room
 {
 	private Hero hero;
 	private StaticEntity[] StaticEntities;
+	private String backgroundTile;
 
 
 	public Room(Hero hero)
 	{
 		this.hero = hero;
+		this.backgroundTile = ImagePaths.WALL;
 		StaticEntity se = new StaticEntity(new Vector2(0.5, 0.4), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
-		//StaticEntity se2 = new StaticEntity(new Vector2(0.6, 0.5), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
+		StaticEntity se2 = new StaticEntity(new Vector2(1, 0.5), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntity se3 = new StaticEntity(new Vector2(0.3, 0.7), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntity se4 = new StaticEntity(new Vector2(0.8, 0.6), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntities = new StaticEntity[4];
 		StaticEntities[0] = se;
-		//StaticEntities[1] = se2;
+		StaticEntities[1] = se2;
 		StaticEntities[2] = se3;
 		StaticEntities[3] = se4;
 	}
@@ -60,8 +62,8 @@ public class Room
 			for (int j = 0; j < RoomInfos.NB_TILES; j++)
 			{
 				Vector2 position = positionFromTileIndex(i, j);
-				StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(),
-						RoomInfos.HALF_TILE_SIZE.getY());
+				StdDraw.picture(position.getX(), position.getY(), backgroundTile);
+				//StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
 			}
 		}
 		hero.drawGameObject();
