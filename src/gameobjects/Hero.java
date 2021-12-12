@@ -17,7 +17,7 @@ public class Hero {
 	private Vector2 direction;
 
 	private Vector2 lastPosition;
-	private Vector2 lastDirection;
+	private Vector2 lastNormalizedDirection;
 
 	public Hero(Vector2 position, Vector2 size, double speed, String imagePath) {
 		this.position = position;
@@ -36,7 +36,7 @@ public class Hero {
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
 		lastPosition = getPosition();
 		setPosition(positionAfterMoving);
-		lastDirection = direction;
+		lastNormalizedDirection = normalizedDirection;
 		direction = new Vector2();
 	}
 
@@ -62,49 +62,39 @@ public class Hero {
 
 		boolean isMoveValid = true;
 		for (StaticEntity entity : entitiesToCollide) {
-			/*
-			 * if (Physics.rectangleCollision(getPosition(), getSize(),
-			 * entity.getPosition(), entity.getSize())) {
-			 * 
-			 * 
-			 * OLD CODE, resets the position and move it back but we can do everything
-			 * simpler by just not making any new movement
-			 * Vector2 pos1 = getPosition();
-			 * Vector2 size1 = getSize();
-			 * Vector2 pos2 = entity.getPosition();
-			 * Vector2 size2 = entity.getSize();
-			 * 
-			 * getPosition().addX(-Math.max(pos1.getX() + (size1.getX() / 2) +
-			 * HeroInfos.AUTHORIZED_OVERLAP - pos2.getX() + (size2.getX() / 2), 0d));
-			 * getPosition().addY(-Math.max(pos1.getY() - (size1.getY() / 2) -
-			 * HeroInfos.AUTHORIZED_OVERLAP - pos2.getY() + (size2.getY() / 2), 0d));
-			 * 
-			 * }
-			 */
 
-			Vector2 pos1 = getPosition();
-			Vector2 size1 = getSize();
-			Vector2 pos2 = entity.getPosition();
-			Vector2 size2 = entity.getSize();
+			 if (entity == null) continue;
 
+			//Movement correction (yes, we could technically do this directly inside the move function
+			//But I find it easier if we put every physic check inside the same function).
 			isMoveValid = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(), entity.getSize());
 			if (!isMoveValid) {
+
+				//Extract X and Y dir
+				Vector2 lastXMovement = new Vector2(lastNormalizedDirection.getX(), 0);
+				Vector2 lastYMovement = new Vector2(0, lastNormalizedDirection.getY());
+
+				//The corrected movement we will use (because last one was incorrect, cf If statement)
+				Vector2 correctedMovement = new Vector2(0, 0);
+
+				//Check if X movement is valid, if yes add it to the corrected movement
+				if(!Physics.rectangleCollision(lastPosition.addVector(lastXMovement), getSize(), entity.getPosition(), entity.getSize())) {
+					correctedMovement = correctedMovement.addVector(lastXMovement);
+					System.out.println("X movement incorrect");
+				}
+
+				//Same for Y
+				if(!Physics.rectangleCollision(lastPosition.addVector(lastYMovement), getSize(), entity.getPosition(), entity.getSize())) {
+					correctedMovement = correctedMovement.addVector(lastYMovement);
+					System.out.println("Y movement incorrect");
+				}
 				
+				//We correct the last position
+				Vector2 correctedPosition = lastPosition.addVector(correctedMovement);
 
 
-				// On the right of the object
-				getPosition().addX(-Math.max(pos1.getX() + (size1.getX() / 2) + HeroInfos.AUTHORIZED_OVERLAP
-						- pos2.getX() + (size2.getX() / 2), 0d));
-				// On the left of the object
-				getPosition().addX(-Math.max(pos1.getX() - (size1.getX() / 2) - HeroInfos.AUTHORIZED_OVERLAP
-						- pos2.getX() + (size2.getX() / 2), 0d));
-				// On below
-				getPosition().addY(-Math.max(pos1.getY() + (size1.getY() / 2) + HeroInfos.AUTHORIZED_OVERLAP
-						- pos2.getY() + (size2.getY() / 2), 0d));
-				// top
-				getPosition().addY(-Math.max(pos1.getY() - (size1.getY() / 2) - HeroInfos.AUTHORIZED_OVERLAP
-						- pos2.getY() + (size2.getY() / 2), 0d));
-
+				//Set it
+				setPosition(correctedPosition);
 				break;
 			}
 		}

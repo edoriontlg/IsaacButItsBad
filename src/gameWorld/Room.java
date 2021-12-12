@@ -18,12 +18,12 @@ public class Room
 	{
 		this.hero = hero;
 		StaticEntity se = new StaticEntity(new Vector2(0.5, 0.4), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
-		StaticEntity se2 = new StaticEntity(new Vector2(0.6, 0.5), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
+		//StaticEntity se2 = new StaticEntity(new Vector2(0.6, 0.5), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntity se3 = new StaticEntity(new Vector2(0.3, 0.7), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntity se4 = new StaticEntity(new Vector2(0.8, 0.6), HeroInfos.ISAAC_SIZE, ImagePaths.ROCK);
 		StaticEntities = new StaticEntity[4];
 		StaticEntities[0] = se;
-		StaticEntities[1] = se2;
+		//StaticEntities[1] = se2;
 		StaticEntities[2] = se3;
 		StaticEntities[3] = se4;
 	}
@@ -68,7 +68,8 @@ public class Room
 		
 		if (StaticEntities != null) {
 			for (StaticEntity entity : StaticEntities) {
-				entity.drawGameObject();
+				if (entity != null)
+					entity.drawGameObject();
 			}
 		}
 	}
