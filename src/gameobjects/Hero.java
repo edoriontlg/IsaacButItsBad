@@ -2,12 +2,9 @@ package gameobjects;
 
 import libraries.StdDraw;
 
-import java.io.Console;
-
 import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
-import resources.HeroInfos;
 import resources.ImagePaths;
 
 public class Hero {
@@ -16,14 +13,12 @@ public class Hero {
 	private String imagePath;
 	private double speed;
 	private Vector2 direction;
-	private double life;
-	private String coeur;
-	private String demiCoeur;
+	private int life;
 
 	private Vector2 lastPosition;
 	private Vector2 lastNormalizedDirection;
 
-	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, double life) {
+	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
@@ -136,20 +131,26 @@ public class Hero {
 					getPosition().getY() + getPosition().subVector(lastPosition).getY());
 		}
 
-		
-			coeur = ImagePaths.HEART_HUD;
-			demiCoeur = ImagePaths.HALF_HEART_HUD;
-			if(this.life == 0.5){
-				StdDraw.picture(0.05, 0.95, demiCoeur);
-			}
-			for(double i = 0; i < 0.05*(this.life-0.5); i+=0.05){
-				StdDraw.picture(0.05+i, 0.95, coeur);
-			}
-			if(this.life-(this.life-0.5) < 1.0){
-				StdDraw.picture(0.05*(this.life+0.5), 0.95, demiCoeur);
-			}
+		//If health not empty, draw hearts, else draw empty heart
+		if (this.life != 0) {
+			//One full heart = 2 life
 
+			int fullHearts = (this.life - this.life%2)/2;
+			boolean HalfHeart = this.life%2 == 1;
+
+			for(double i = 0; i < fullHearts; i++){
+				StdDraw.picture(0.05*(i + 1), 0.95, ImagePaths.HEART_HUD);
+			}
+	
+			//If health not even we draw the half heart
+			if (HalfHeart) {
+				StdDraw.picture(0.05* (this.life/2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
+			}
+		} else {
+			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
 		}
+
+	}
 		
 			
 		
