@@ -62,8 +62,8 @@ public class Room
 			for (int j = 0; j < RoomInfos.NB_TILES; j++)
 			{
 				Vector2 position = positionFromTileIndex(i, j);
-				StdDraw.picture(position.getX(), position.getY(), backgroundTile);
-				//StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
+				//StdDraw.picture(position.getX(), position.getY(), backgroundTile);
+				StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
 			}
 		}
 		hero.drawGameObject();
