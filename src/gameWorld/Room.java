@@ -47,7 +47,7 @@ public class Room
 	 */
 	public void drawRoom()
 	{
-		// For every tile, set background color.
+		//For every CENTER TILE draw them
 		StdDraw.setPenColor(StdDraw.GRAY);
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++)
 		{
@@ -59,6 +59,7 @@ public class Room
 			}
 		}
 
+		//Draw walls
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i ++) {
 			Vector2 position = positionFromTileIndex(0, i);
 			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
@@ -70,6 +71,8 @@ public class Room
 			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_TOP, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
 		}
 
+
+		//Draw corners
 		StdDraw.picture(positionFromTileIndex(0, 0).getX(), positionFromTileIndex(0, 0).getY(), ImagePaths.CORNER_BOTTOM_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
 		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), ImagePaths.CORNER_BOTTOM_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
 		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), ImagePaths.CORNER_UP_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
