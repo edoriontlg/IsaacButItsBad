@@ -2,6 +2,8 @@ package gameobjects;
 
 import libraries.StdDraw;
 
+import java.util.List;
+
 import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
@@ -40,7 +42,7 @@ public class Hero {
 		direction = new Vector2();
 	}
 
-	public void processPhysics(StaticEntity[] entitiesToCollide) {
+	public void processPhysics(List<StaticEntity> entitiesToCollide) {
 		// Yes, by doing this if two static entities are to close to each other
 		// you will completely ignore the physics of one of them.
 		// Just dont put objects to close.
