@@ -48,7 +48,6 @@ public class Room
 	public void drawRoom()
 	{
 		//For every CENTER TILE draw them
-		StdDraw.setPenColor(StdDraw.GRAY);
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++)
 		{
 			for (int j = 1; j < RoomInfos.NB_TILES - 1; j++)

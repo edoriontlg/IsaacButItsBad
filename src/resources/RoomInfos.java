@@ -4,7 +4,7 @@ import libraries.Vector2;
 
 public class RoomInfos
 {
-	public static final int NB_TILES = 9;
+	public static final int NB_TILES = 9; //Beyond 11 we start to see the limitations of stddraw. Don't go beyond that
 	public static final double TILE_WIDTH = 1.0 / NB_TILES;
 	public static final double TILE_HEIGHT = 1.0 / NB_TILES;
 	public static final Vector2 TILE_SIZE = new Vector2(TILE_WIDTH, TILE_HEIGHT);
