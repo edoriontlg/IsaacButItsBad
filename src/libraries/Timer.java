@@ -9,6 +9,7 @@ public class Timer
 {
 
 	private static Instant startOfLoop;
+	public static int frameMS;
 
 	/**
 	 * This method allows us to pause the game for a parametrised time. The pausing
@@ -18,6 +19,7 @@ public class Timer
 	public static void waitToMaintainConstantFPS()
 	{
 		int durationLoopMs = (int) Duration.between(startOfLoop, Instant.now()).toMillis();
+		frameMS = durationLoopMs;
 		int timeToPauseMs = DisplaySettings.MILLISECONDS_PER_FRAME_TO_MAINTAIN_FPS - durationLoopMs;
 		if (timeToPauseMs > 0)
 		{

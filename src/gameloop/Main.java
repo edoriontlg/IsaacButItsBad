@@ -33,6 +33,12 @@ public class Main
 		world.updateGameObjects();
 		world.processPhysics();
 		world.drawGameObjects();
+
+		if (DisplaySettings.DRAW_DEBUG_INFO) {
+			StdDraw.setPenColor(StdDraw.GREEN);
+			StdDraw.text(0.1, 0.05, "FPS :" + Math.round(1/ (Timer.frameMS * 0.001d)));
+		}
+
 		StdDraw.show();
 		Timer.waitToMaintainConstantFPS();
 	}

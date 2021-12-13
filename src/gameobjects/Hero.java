@@ -9,6 +9,7 @@ import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
 import resources.ImagePaths;
+import resources.RoomInfos;
 
 public class Hero {
 	private Vector2 position;
@@ -100,15 +101,15 @@ public class Hero {
 		Vector2 newPos = new Vector2(getPosition());
 
 		// We check if it's valid (top and bottom) and if not we correct it
-		if (getPosition().getX() + (getSize().getX() / 2) > Room.positionFromTileIndex(8, 8).getY()) {
-			newPos.setX(Room.positionFromTileIndex(8, 8).getY() - (getSize().getX() / 2));
+		if (getPosition().getX() + (getSize().getX() / 2) > Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getY()) {
+			newPos.setX(Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getY() - (getSize().getX() / 2));
 		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
 			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
 		}
 
 		// We check if it's valid (left and right) and if not we correct it
-		if (getPosition().getY() + (getSize().getX() / 2) > Room.positionFromTileIndex(8, 8).getX()) {
-			newPos.setY(Room.positionFromTileIndex(8, 8).getX() - (getSize().getX() / 2));
+		if (getPosition().getY() + (getSize().getX() / 2) > Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getX()) {
+			newPos.setY(Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getX() - (getSize().getX() / 2));
 		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
 			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
 		}

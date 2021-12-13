@@ -41,4 +41,14 @@ public class ImagePaths
 
 	public static final String WIN_SCREEN = "images/win.jpg";
 	public static final String LOSE_SCREEN = "images/lose.png";
+
+	public static final String BACKGROUND_TILE_1 = "images/BackgroundTile1.png";
+	public static final String CORNER_UP_RIGHT = "images/CornerUpRight.png";
+	public static final String CORNER_UP_LEFT = "images/CornerUpLeft.png";
+	public static final String CORNER_BOTTOM_RIGHT = "images/CornerBottomRight.png";
+	public static final String CORNER_BOTTOM_LEFT = "images/CornerBottomLeft.png";
+	public static final String WALL_TOP = "images/WallUp.png";
+	public static final String WALL_BOTTOM = "images/WallDown.png";
+	public static final String WALL_RIGHT = "images/WallRight.png";
+	public static final String WALL_LEFT = "images/WallLeft.png";
 }

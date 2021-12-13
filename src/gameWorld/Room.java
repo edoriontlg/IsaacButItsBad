@@ -19,7 +19,7 @@ public class Room
 	public Room(Hero hero)
 	{
 		this.hero = hero;
-		this.backgroundTile = ImagePaths.WALL;
+		this.backgroundTile = ImagePaths.BACKGROUND_TILE_1;
 	}
 
 
@@ -49,15 +49,33 @@ public class Room
 	{
 		// For every tile, set background color.
 		StdDraw.setPenColor(StdDraw.GRAY);
-		for (int i = 0; i < RoomInfos.NB_TILES; i++)
+		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++)
 		{
-			for (int j = 0; j < RoomInfos.NB_TILES; j++)
+			for (int j = 1; j < RoomInfos.NB_TILES - 1; j++)
 			{
 				Vector2 position = positionFromTileIndex(i, j);
-				StdDraw.picture(position.getX(), position.getY(), backgroundTile);
-				StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
+				StdDraw.picture(position.getX(), position.getY(), backgroundTile, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+				//StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
 			}
 		}
+
+		for (int i = 1; i < RoomInfos.NB_TILES - 1; i ++) {
+			Vector2 position = positionFromTileIndex(0, i);
+			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			position = positionFromTileIndex(RoomInfos.NB_TILES - 1, i);
+			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			position = positionFromTileIndex(i, 0);
+			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_BOTTOM, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			position = positionFromTileIndex(i, RoomInfos.NB_TILES - 1);
+			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_TOP, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+		}
+
+		StdDraw.picture(positionFromTileIndex(0, 0).getX(), positionFromTileIndex(0, 0).getY(), ImagePaths.CORNER_BOTTOM_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), ImagePaths.CORNER_BOTTOM_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), ImagePaths.CORNER_UP_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+		StdDraw.picture(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), ImagePaths.CORNER_UP_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+
+
 		hero.drawGameObject();
 		
 		if (StaticEntities != null) {
