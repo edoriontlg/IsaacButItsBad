@@ -47,64 +47,71 @@ public class Hero {
 		// you will completely ignore the physics of one of them.
 		// Just dont put objects to close.
 		boolean isMoveValid = true;
-		for (StaticEntity entity : entitiesToCollide) {
 
-			if (entity == null)
-				continue;
+		if (entitiesToCollide != null) {
 
-			// Movement correction (yes, we could technically do this directly inside the
-			// move function
-			// But I find it easier if we put every physic check inside the same function).
-			isMoveValid = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(), entity.getSize());
-			if (!isMoveValid) {
+			for (StaticEntity entity : entitiesToCollide) {
 
-				// Extract X and Y dir
-				Vector2 lastXMovement = new Vector2(lastNormalizedDirection.getX(), 0);
-				Vector2 lastYMovement = new Vector2(0, lastNormalizedDirection.getY());
+				if (entity == null)
+					continue;
 
-				// The corrected movement we will use (because last one was incorrect, cf If
-				// statement)
-				Vector2 correctedMovement = new Vector2(0, 0);
+				// Movement correction (yes, we could technically do this directly inside the
+				// move function
+				// But I find it easier if we put every physic check inside the same function).
+				isMoveValid = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(),
+						entity.getSize());
+				if (!isMoveValid) {
 
-				// Check if X movement is valid, if yes add it to the corrected movement
-				if (!Physics.rectangleCollision(lastPosition.addVector(lastXMovement), getSize(), entity.getPosition(),
-						entity.getSize())) {
-					correctedMovement = correctedMovement.addVector(lastXMovement);
+					// Extract X and Y dir
+					Vector2 lastXMovement = new Vector2(lastNormalizedDirection.getX(), 0);
+					Vector2 lastYMovement = new Vector2(0, lastNormalizedDirection.getY());
+
+					// The corrected movement we will use (because last one was incorrect, cf If
+					// statement)
+					Vector2 correctedMovement = new Vector2(0, 0);
+
+					// Check if X movement is valid, if yes add it to the corrected movement
+					if (!Physics.rectangleCollision(lastPosition.addVector(lastXMovement), getSize(),
+							entity.getPosition(),
+							entity.getSize())) {
+						correctedMovement = correctedMovement.addVector(lastXMovement);
+					}
+
+					// Same for Y
+					if (!Physics.rectangleCollision(lastPosition.addVector(lastYMovement), getSize(),
+							entity.getPosition(),
+							entity.getSize())) {
+						correctedMovement = correctedMovement.addVector(lastYMovement);
+					}
+
+					// We correct the last position
+					Vector2 correctedPosition = lastPosition.addVector(correctedMovement);
+
+					// Set it
+					setPosition(correctedPosition);
+					break;
 				}
-
-				// Same for Y
-				if (!Physics.rectangleCollision(lastPosition.addVector(lastYMovement), getSize(), entity.getPosition(),
-						entity.getSize())) {
-					correctedMovement = correctedMovement.addVector(lastYMovement);
-				}
-
-				// We correct the last position
-				Vector2 correctedPosition = lastPosition.addVector(correctedMovement);
-
-				// Set it
-				setPosition(correctedPosition);
-				break;
 			}
+
+			// We get the current pos
+			Vector2 newPos = new Vector2(getPosition());
+
+			// We check if it's valid (top and bottom) and if not we correct it
+			if (getPosition().getX() + (getSize().getX() / 2) > 1d) {
+				newPos.setX(1d - (getSize().getX() / 2));
+			} else if (getPosition().getX() - (getSize().getX() / 2) < 0d) {
+				newPos.setX(0d + (getSize().getX() / 2));
+			}
+
+			// We check if it's valid (left and right) and if not we correct it
+			if (getPosition().getY() + (getSize().getX() / 2) > 1d) {
+				newPos.setY(1d - (getSize().getX() / 2));
+			} else if (getPosition().getY() - (getSize().getX() / 2) < 0d) {
+				newPos.setY(0d + (getSize().getX() / 2));
+			}
+
+			setPosition(newPos);
 		}
-
-		// We get the current pos
-		Vector2 newPos = new Vector2(getPosition());
-
-		// We check if it's valid (top and bottom) and if not we correct it
-		if (getPosition().getX() + (getSize().getX() / 2) > 1d) {
-			newPos.setX(1d - (getSize().getX() / 2));
-		} else if (getPosition().getX() - (getSize().getX() / 2) < 0d) {
-			newPos.setX(0d + (getSize().getX() / 2));
-		}
-
-		// We check if it's valid (left and right) and if not we correct it
-		if (getPosition().getY() + (getSize().getX() / 2) > 1d) {
-			newPos.setY(1d - (getSize().getX() / 2));
-		} else if (getPosition().getY() - (getSize().getX() / 2) < 0d) {
-			newPos.setY(0d + (getSize().getX() / 2));
-		}
-
-		setPosition(newPos);
 	}
 
 	public void drawGameObject() {
@@ -121,8 +128,6 @@ public class Hero {
 			StdDraw.rectangle(getPosition().getX(), getPosition().getY(), getSize().getX() / 2d, getSize().getY() / 2d);
 		}
 
-		
-
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.GREEN);
 			StdDraw.setPenRadius(0.004);
@@ -133,30 +138,26 @@ public class Hero {
 					getPosition().getY() + getPosition().subVector(lastPosition).getY());
 		}
 
-		//If health not empty, draw hearts, else draw empty heart
+		// If health not empty, draw hearts, else draw empty heart
 		if (this.life != 0) {
-			//One full heart = 2 life
+			// One full heart = 2 life
 
-			int fullHearts = (this.life - this.life%2)/2;
-			boolean HalfHeart = this.life%2 == 1;
+			int fullHearts = (this.life - this.life % 2) / 2;
+			boolean HalfHeart = this.life % 2 == 1;
 
-			for(double i = 0; i < fullHearts; i++){
-				StdDraw.picture(0.05*(i + 1), 0.95, ImagePaths.HEART_HUD);
+			for (double i = 0; i < fullHearts; i++) {
+				StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HEART_HUD);
 			}
-	
-			//If health not even we draw the half heart
+
+			// If health not even we draw the half heart
 			if (HalfHeart) {
-				StdDraw.picture(0.05* (this.life/2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
+				StdDraw.picture(0.05 * (this.life / 2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
 			}
 		} else {
 			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
 		}
 
 	}
-		
-			
-		
-	
 
 	/*
 	 * Moving from key inputs. Direction vector is later normalised.
