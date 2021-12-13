@@ -54,7 +54,7 @@ public class Room
 			for (int j = 0; j < RoomInfos.NB_TILES; j++)
 			{
 				Vector2 position = positionFromTileIndex(i, j);
-				//StdDraw.picture(position.getX(), position.getY(), backgroundTile);
+				StdDraw.picture(position.getX(), position.getY(), backgroundTile);
 				StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
 			}
 		}
@@ -75,7 +75,7 @@ public class Room
 	 * @param indexY
 	 * @return
 	 */
-	private static Vector2 positionFromTileIndex(int indexX, int indexY)
+	public static Vector2 positionFromTileIndex(int indexX, int indexY)
 	{
 		return new Vector2(indexX * RoomInfos.TILE_WIDTH + RoomInfos.HALF_TILE_SIZE.getX(),
 				indexY * RoomInfos.TILE_HEIGHT + RoomInfos.HALF_TILE_SIZE.getY());

@@ -4,6 +4,7 @@ import libraries.StdDraw;
 
 import java.util.List;
 
+import gameWorld.Room;
 import libraries.Physics;
 import libraries.Vector2;
 import resources.DisplaySettings;
@@ -43,6 +44,7 @@ public class Hero {
 	}
 
 	public void processPhysics(List<StaticEntity> entitiesToCollide) {
+
 		// Yes, by doing this if two static entities are to close to each other
 		// you will completely ignore the physics of one of them.
 		// Just dont put objects to close.
@@ -92,26 +94,26 @@ public class Hero {
 					break;
 				}
 			}
-
-			// We get the current pos
-			Vector2 newPos = new Vector2(getPosition());
-
-			// We check if it's valid (top and bottom) and if not we correct it
-			if (getPosition().getX() + (getSize().getX() / 2) > 1d) {
-				newPos.setX(1d - (getSize().getX() / 2));
-			} else if (getPosition().getX() - (getSize().getX() / 2) < 0d) {
-				newPos.setX(0d + (getSize().getX() / 2));
-			}
-
-			// We check if it's valid (left and right) and if not we correct it
-			if (getPosition().getY() + (getSize().getX() / 2) > 1d) {
-				newPos.setY(1d - (getSize().getX() / 2));
-			} else if (getPosition().getY() - (getSize().getX() / 2) < 0d) {
-				newPos.setY(0d + (getSize().getX() / 2));
-			}
-
-			setPosition(newPos);
 		}
+
+		// We get the current pos
+		Vector2 newPos = new Vector2(getPosition());
+
+		// We check if it's valid (top and bottom) and if not we correct it
+		if (getPosition().getX() + (getSize().getX() / 2) > Room.positionFromTileIndex(8, 8).getY()) {
+			newPos.setX(Room.positionFromTileIndex(8, 8).getY() - (getSize().getX() / 2));
+		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
+			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
+		}
+
+		// We check if it's valid (left and right) and if not we correct it
+		if (getPosition().getY() + (getSize().getX() / 2) > Room.positionFromTileIndex(8, 8).getX()) {
+			newPos.setY(Room.positionFromTileIndex(8, 8).getX() - (getSize().getX() / 2));
+		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
+			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
+		}
+
+		setPosition(newPos);
 	}
 
 	public void drawGameObject() {
