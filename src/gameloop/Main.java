@@ -2,7 +2,7 @@ package gameloop;
 
 import gameWorld.GameWorld;
 import gameobjects.Hero;
-import gameobjects.ObjetSol;
+import gameobjects.ObjectOnGround;
 import libraries.StdDraw;
 import libraries.Timer;
 import resources.DisplaySettings;
@@ -12,6 +12,12 @@ import resources.RoomInfos;
 
 public class Main
 {
+
+
+	public static long updateTime;
+	public static long renderTime;
+	public static long physicsTime;
+
 	public static void main(String[] args)
 	{
 		// Hero, world and display initialisation.
@@ -31,13 +37,19 @@ public class Main
 		Timer.beginTimer();
 		StdDraw.clear();
 		world.processUserInput();
+		long tmp = System.nanoTime();
 		world.updateGameObjects();
+		updateTime = System.nanoTime() - tmp;
 		world.processPhysics();
+		physicsTime = System.nanoTime() - (tmp + updateTime);
 		world.drawGameObjects();
+		renderTime = System.nanoTime() - (tmp + updateTime + physicsTime);
 
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.GREEN);
-			StdDraw.text(0.1, 0.05, "FPS :" + Math.round(1/ (Timer.frameMS * 0.001d)));
+			StdDraw.text(0.1, 0.05, "UT :" + Math.round(updateTime / 10000d) / 100d);
+			StdDraw.text(0.1, 0.08, "PT :" + Math.round(physicsTime / 10000d) / 100d);
+			StdDraw.text(0.1, 0.11, "RT :" + Math.round(renderTime / 10000d) / 100d);
 		}
 
 		StdDraw.show();

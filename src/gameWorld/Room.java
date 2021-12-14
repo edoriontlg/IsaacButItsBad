@@ -3,26 +3,30 @@ package gameWorld;
 import java.util.ArrayList;
 import java.util.List;
 import gameobjects.Hero;
-import gameobjects.ObjetSol;
+import gameobjects.ObjectOnGround;
 import gameobjects.StaticEntity;
 import libraries.StdDraw;
 import libraries.Vector2;
-import resources.HeroInfos;
+import resources.DisplaySettings;
 import resources.ImagePaths;
 import resources.RoomInfos;
 
 public class Room
 {
 	private Hero hero;
-	private List<StaticEntity> StaticEntities;
 	private String backgroundTile;
-	private List<ObjetSol> ObjetSols = new ArrayList<ObjetSol>();;
+	private List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
+	private List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
 
 
 	public Room(Hero hero)
 	{
 		this.hero = hero;
 		this.backgroundTile = ImagePaths.BACKGROUND_TILE_1;
+		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.8), RoomInfos.HEART_SIZE, ImagePaths.HEART_PICKABLE));
+		StaticEntities.add(new StaticEntity(positionFromTileIndex(5, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+		StaticEntities.add(new StaticEntity(positionFromTileIndex(4, 6), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+		StaticEntities.add(new StaticEntity(positionFromTileIndex(8, 2), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
 	}
 
 
@@ -43,8 +47,7 @@ public class Room
 
 	
 	public void processPhysics() {
-		hero.processPhysics(StaticEntities);
-		hero.processPhysicsObjets(ObjetSols);
+		hero.processPhysics(StaticEntities, ObjectPickable);
 	}
 	
 
@@ -85,9 +88,8 @@ public class Room
 
 
 		hero.drawGameObject();
-		ObjetSols.add(new ObjetSol(new Vector2(0.5, 0.8), RoomInfos.HEART_SIZE, ImagePaths.HEART_PICKABLE));
-		if (ObjetSols != null) {
-			for (ObjetSol sol : ObjetSols) {
+		if (ObjectPickable != null) {
+			for (ObjectOnGround sol : ObjectPickable) {
 				if (sol != null)
 					sol.drawGameObject();
 			}

@@ -45,8 +45,41 @@ public class Hero {
 		direction = new Vector2();
 	}
 
-	public void processPhysics(List<StaticEntity> entitiesToCollide) {
+	public void processPhysics(List<StaticEntity> entitiesToCollide, List<ObjectOnGround> objectsToCollide) {
+		//We need to do this one first, if done after it could 
+		//Make us go into the walls
+		processPhysicsEntities(entitiesToCollide);
+		processPhysicsSides();
+		processPhysicsObjets(objectsToCollide);
+	}
 
+	private void processPhysicsSides() {
+		// We get the current pos
+		Vector2 newPos = new Vector2(getPosition());
+
+		// We check if it's valid (top and bottom) and if not we correct it
+		if (getPosition().getX() + (getSize().getX() / 2) > Room
+				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()) {
+			newPos.setX(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()
+					- (getSize().getX() / 2));
+		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
+			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
+		}
+
+		// We check if it's valid (left and right) and if not we correct it
+		if (getPosition().getY() + (getSize().getX() / 2) > Room
+				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()) {
+			newPos.setY(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()
+					- (getSize().getX() / 2));
+		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
+			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
+		}
+		if (newPos != getPosition())
+			setPosition(newPos);
+	}
+
+	private void processPhysicsEntities(List<StaticEntity> entitiesToCollide) {
+		
 		// Yes, by doing this if two static entities are to close to each other
 		// you will completely ignore the physics of one of them.
 		// Just dont put objects to close.
@@ -90,7 +123,7 @@ public class Hero {
 
 					// We correct the last position
 					Vector2 correctedPosition = lastPosition.addVector(correctedMovement);
-
+					
 					// Set it
 					setPosition(correctedPosition);
 					break;
@@ -99,34 +132,24 @@ public class Hero {
 		}
 	}
 
-		public void processPhysicsObjets(List<ObjetSol> objetToCollide) {
-			if (objetToCollide != null) {	
-				for (ObjetSol sol : objetToCollide) {
-					if(Physics.rectangleCollision(getPosition(), getSize(), sol.getPosition(), sol.getSize())){
-						this.life += 1;
-						
-					}
+	public void processPhysicsObjets(List<ObjectOnGround> objectsToCollide) {
+		if (objectsToCollide != null) {
+			//We store the object we will need to delete
+			List<ObjectOnGround> objToRemove = new ArrayList<ObjectOnGround>();
+
+			//For each, if collision we do something then delete it
+			for (ObjectOnGround obj : objectsToCollide) {
+				if (obj != null && Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
+					this.life += 1;
+					objToRemove.add(obj);
+				}
+			}
+
+			//We ACTUALLY remove it (not inside the first loop, it messes up everything)
+			for (ObjectOnGround obj : objToRemove) {
+				objectsToCollide.remove(obj);
 			}
 		}
-
-		// We get the current pos
-		Vector2 newPos = new Vector2(getPosition());
-
-		// We check if it's valid (top and bottom) and if not we correct it
-		if (getPosition().getX() + (getSize().getX() / 2) > Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getY()) {
-			newPos.setX(Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getY() - (getSize().getX() / 2));
-		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
-			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
-		}
-
-		// We check if it's valid (left and right) and if not we correct it
-		if (getPosition().getY() + (getSize().getX() / 2) > Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getX()) {
-			newPos.setY(Room.positionFromTileIndex(RoomInfos.NB_TILES-1, RoomInfos.NB_TILES-1).getX() - (getSize().getX() / 2));
-		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
-			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
-		}
-
-		setPosition(newPos);
 	}
 
 	public void drawGameObject() {
@@ -141,9 +164,7 @@ public class Hero {
 					+ Math.round(getPosition().getY() * 1000d) / 1000d);
 			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.rectangle(getPosition().getX(), getPosition().getY(), getSize().getX() / 2d, getSize().getY() / 2d);
-		}
 
-		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.GREEN);
 			StdDraw.setPenRadius(0.004);
 
@@ -242,10 +263,11 @@ public class Hero {
 		this.direction = direction;
 	}
 
-	public int getLife(){
+	public int getLife() {
 		return this.life;
 	}
-	public void setLife(int life){
+
+	public void setLife(int life) {
 		this.life = life;
 	}
 }
