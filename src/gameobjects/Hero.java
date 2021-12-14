@@ -2,6 +2,7 @@ package gameobjects;
 
 import libraries.StdDraw;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gameWorld.Room;
@@ -94,6 +95,17 @@ public class Hero {
 					setPosition(correctedPosition);
 					break;
 				}
+			}
+		}
+	}
+
+		public void processPhysicsObjets(List<ObjetSol> objetToCollide) {
+			if (objetToCollide != null) {	
+				for (ObjetSol sol : objetToCollide) {
+					if(Physics.rectangleCollision(getPosition(), getSize(), sol.getPosition(), sol.getSize())){
+						this.life += 1;
+						
+					}
 			}
 		}
 
@@ -228,5 +240,12 @@ public class Hero {
 
 	public void setDirection(Vector2 direction) {
 		this.direction = direction;
+	}
+
+	public int getLife(){
+		return this.life;
+	}
+	public void setLife(int life){
+		this.life = life;
 	}
 }

@@ -1,7 +1,9 @@
 package gameWorld;
 
+import java.util.ArrayList;
 import java.util.List;
 import gameobjects.Hero;
+import gameobjects.ObjetSol;
 import gameobjects.StaticEntity;
 import libraries.StdDraw;
 import libraries.Vector2;
@@ -14,6 +16,7 @@ public class Room
 	private Hero hero;
 	private List<StaticEntity> StaticEntities;
 	private String backgroundTile;
+	private List<ObjetSol> ObjetSols = new ArrayList<ObjetSol>();;
 
 
 	public Room(Hero hero)
@@ -21,6 +24,7 @@ public class Room
 		this.hero = hero;
 		this.backgroundTile = ImagePaths.BACKGROUND_TILE_1;
 	}
+
 
 
 	/*
@@ -40,8 +44,10 @@ public class Room
 	
 	public void processPhysics() {
 		hero.processPhysics(StaticEntities);
+		hero.processPhysicsObjets(ObjetSols);
 	}
 	
+
 	/*
 	 * Drawing
 	 */
@@ -79,6 +85,13 @@ public class Room
 
 
 		hero.drawGameObject();
+		ObjetSols.add(new ObjetSol(new Vector2(0.5, 0.8), RoomInfos.HEART_SIZE, ImagePaths.HEART_PICKABLE));
+		if (ObjetSols != null) {
+			for (ObjetSol sol : ObjetSols) {
+				if (sol != null)
+					sol.drawGameObject();
+			}
+		}
 		
 		if (StaticEntities != null) {
 			for (StaticEntity entity : StaticEntities) {
