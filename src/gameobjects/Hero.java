@@ -19,17 +19,19 @@ public class Hero {
 	private double speed;
 	private Vector2 direction;
 	private int life;
+	private int money;
 
 	private Vector2 lastPosition;
 	private Vector2 lastNormalizedDirection;
 
-	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life) {
+	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
 		this.imagePath = imagePath;
 		this.direction = new Vector2();
 		this.life = life;
+		this.money = money;
 	}
 
 	public void updateGameObject() {
@@ -140,8 +142,27 @@ public class Hero {
 			//For each, if collision we do something then delete it
 			for (ObjectOnGround obj : objectsToCollide) {
 				if (obj != null && Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
-					this.life += 1;
-					objToRemove.add(obj);
+					if(obj.getImagePath()=="images/Red_Heart.png"){
+						if(this.life<5){
+							this.life += 2;
+							objToRemove.add(obj);}
+				}
+					else if(obj.getImagePath()=="images/Half_Red_Heart.png"){
+						if(this.life<6){
+							this.life += 1;
+							objToRemove.add(obj);}
+					}
+
+					else if(obj.getImagePath()=="images/Penny.png"){
+							this.money += 1;
+							objToRemove.add(obj);}
+					else if(obj.getImagePath()=="images/Nickel.png"){
+							this.money += 5;
+							objToRemove.add(obj);}
+					else if(obj.getImagePath()=="images/Dime.png"){
+							this.money += 10;
+							objToRemove.add(obj);}	
+					
 				}
 			}
 
@@ -155,7 +176,8 @@ public class Hero {
 	public void drawGameObject() {
 		StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
 				0);
-
+				StdDraw.setPenColor(StdDraw.WHITE);
+				StdDraw.text(0.1,0.9, this.money+"");
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.WHITE);
 			StdDraw.text(0.15, 0.95, "x:"
