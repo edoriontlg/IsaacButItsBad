@@ -2,13 +2,11 @@ package gameobjects;
 
 import libraries.StdDraw;
 
-import java.util.Vector;
 
-import gameobjects.Hero;
-import libraries.Physics;
+
+
 import libraries.Vector2;
 import resources.DisplaySettings;
-import resources.ImagePaths;
 
 public class ObjectOnGround {
 

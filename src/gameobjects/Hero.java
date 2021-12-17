@@ -17,7 +17,7 @@ public class Hero {
 	private Vector2 size;
 	private String imagePath;
 	private double speed;
-	private Vector2 direction;
+	Vector2 direction;
 	private int life;
 	private int money;
 
@@ -161,7 +161,7 @@ public class Hero {
 							objToRemove.add(obj);}
 					else if(obj.getImagePath()=="images/Dime.png"){
 							this.money += 10;
-							objToRemove.add(obj);}	
+							objToRemove.add(obj);}
 					
 				}
 			}
@@ -211,6 +211,7 @@ public class Hero {
 			if (HalfHeart) {
 				StdDraw.picture(0.05 * (this.life / 2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
 			}
+
 		} else {
 			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
 		}
