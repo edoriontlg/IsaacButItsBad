@@ -94,6 +94,8 @@ public class Room
 
 		hero.drawGameObject();
 		StdDraw.picture(0.05,0.9,ImagePaths.COIN);
+
+
 		if (ObjectPickable != null) {
 			for (ObjectOnGround sol : ObjectPickable) {
 				if (sol != null)
