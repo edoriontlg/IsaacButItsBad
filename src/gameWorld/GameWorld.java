@@ -87,28 +87,28 @@ public class GameWorld
 		if(System.currentTimeMillis() - lastTime > 1000 || System.currentTimeMillis() - lastTime<0){
 		if (StdDraw.isKeyPressed(Controls.shootUp))
 		{
-			Tear tear = new Tear(hero.getPosition(), HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, "images/tear.png");
+			Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4), HeroInfos.ISAAC_SPEED, "images/tear.png");
 			Tears.add(tear);
 			tear.shootUpNext();
 			lastTime = System.currentTimeMillis();
 		}
 		if (StdDraw.isKeyPressed(Controls.shootDown))
 		{
-			Tear tear = new Tear(hero.getPosition(), HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, "images/tear.png");
+			Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4), HeroInfos.ISAAC_SPEED, "images/tear.png");
 			Tears.add(tear);
 			tear.shootDownNext();
 			lastTime = System.currentTimeMillis();
 		}
 		if (StdDraw.isKeyPressed(Controls.shootRight))
 		{
-			Tear tear = new Tear(hero.getPosition(), HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, "images/tear.png");
+			Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4), HeroInfos.ISAAC_SPEED, "images/tear.png");
 			Tears.add(tear);
 			tear.shootRightNext();
 			lastTime = System.currentTimeMillis();
 		}
 		if (StdDraw.isKeyPressed(Controls.shootLeft))
 		{
-			Tear tear = new Tear(hero.getPosition(), HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, "images/tear.png");
+			Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4), HeroInfos.ISAAC_SPEED, "images/tear.png");
 			Tears.add(tear);
 			tear.shootLeftNext();
 			lastTime = System.currentTimeMillis();
