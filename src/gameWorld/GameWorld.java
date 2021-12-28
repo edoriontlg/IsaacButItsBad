@@ -16,7 +16,9 @@ public class GameWorld
 	private Room currentRoom;
 	private Hero hero;
 	private List<Tear> Tears = new ArrayList<Tear>();
+	private List<Monstre> Monstres = new ArrayList<Monstre>();
 	private long lastTime = 0;
+	
 
 	// A world needs a hero
 	public GameWorld(Hero hero)
@@ -44,6 +46,7 @@ public class GameWorld
 	public void processPhysics() {
 		currentRoom.processPhysics();
 		processPhysicsTears(Tears);
+		processPhysicsFly(Monstres);
 
 	}
 
@@ -55,6 +58,13 @@ public class GameWorld
 				if (larme != null)
 					larme.drawGameObject();
 					larme.updateGameObject();
+			}
+		}
+		if (Monstres != null) {
+			for (Monstre monstre : Monstres) {
+				if (monstre != null)
+					monstre.drawGameObject();
+					monstre.updateGameObject();
 			}
 		}
 	}
@@ -84,7 +94,7 @@ public class GameWorld
 	}
 
 	private void processKeysForShooting(){
-		if(System.currentTimeMillis() - lastTime > 1000 || System.currentTimeMillis() - lastTime<0){
+		if(System.currentTimeMillis() - lastTime > 250 || System.currentTimeMillis() - lastTime<0){
 		if (StdDraw.isKeyPressed(Controls.shootUp))
 		{
 			Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4), HeroInfos.ISAAC_SPEED, "images/tear.png");
@@ -128,13 +138,12 @@ public class GameWorld
 
 		public void processPhysicsTears(List<Tear> Tears) {
 			if (Tears != null) {
-				//We store the object we will need to delete
+				//We store the tear we will need to delete
 				List<Tear> tearToRemove = new ArrayList<Tear>();
 	
 				//For each, if collision we do something then delete it
 				for (Tear larme : Tears) {
-					System.out.println(larme);
-					if (larme != null && Physics.rectangleCollision(new Vector2(0.5, 0.8), RoomInfos.PICKABLE_SIZE, larme.getPosition(), larme.getSize())) {
+					if (larme.getPosition().getX()>0.9 || larme.getPosition().getX()<0.1 || larme.getPosition().getY()>0.9 || larme.getPosition().getY()<0.1) {
 						tearToRemove.add(larme);
 					}			
 				}
@@ -145,5 +154,17 @@ public class GameWorld
 				}
 			}
 			
+		}
+
+		public void processPhysicsFly(List<Monstre> Monstres){
+			if (Monstres != null) {
+				//We store the object we will need to delete
+				List<Monstre> monstreToRemove = new ArrayList<Monstre>();
+
+				for (Monstre monstres : Monstres) {
+					if(monstres.getType()=="fly"){
+					}
+				}
+		}
 	}
 }
