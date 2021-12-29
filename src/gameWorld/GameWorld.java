@@ -25,6 +25,7 @@ public class GameWorld
 	{
 		this.hero = hero;
 		currentRoom = new Room(hero);
+		Monstres.add(new Fly(new Vector2(0.5,0.5), RoomInfos.TILE_SIZE.scalarMultiplication(0.7),0.01, "images/Fly.png", 3, "fly"));
 	}
 
 	public void processUserInput()
@@ -41,6 +42,7 @@ public class GameWorld
 	public void updateGameObjects()
 	{
 		currentRoom.updateRoom();
+		
 	}
 	
 	public void processPhysics() {
@@ -163,6 +165,8 @@ public class GameWorld
 
 				for (Monstre monstres : Monstres) {
 					if(monstres.getType()=="fly"){
+						
+
 					}
 				}
 		}
