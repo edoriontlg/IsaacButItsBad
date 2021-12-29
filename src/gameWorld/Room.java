@@ -18,8 +18,10 @@ public class Room
 	private Image BACKGROUND_TILE;
 	private Image WALL;
 	private Image CORNER;
-	private List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
-	private List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
+
+	//We make it protected so other rooms can use it, but not other classes.
+	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
+	protected List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
 
 
 	public Room(Hero hero)
@@ -30,14 +32,6 @@ public class Room
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
 
 		//Temporary
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.HEART_PICKABLE));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.6), RoomInfos.PICKABLE_SIZE, ImagePaths.HALF_HEART_PICKABLE));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.1, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.COIN));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.2, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.NICKEL));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.7, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.DIME));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(5, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(4, 6), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(8, 2), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
 	}
 
 

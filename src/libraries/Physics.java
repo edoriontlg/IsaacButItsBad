@@ -35,12 +35,7 @@ public class Physics
 			StdDraw.rectangle(pos2.getX(), pos2.getY(),  size2.getX(),  size2.getY());
 		}
 		
-		
-		if (tooFarLeft || tooFarRight || tooFarAbove || tooFarBelow)
-		{
-			return false;
-		}
-		return true;
+		return !(tooFarLeft || tooFarRight || tooFarAbove || tooFarBelow);
 	}
 
 	/**

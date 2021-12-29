@@ -1,6 +1,8 @@
 package gameloop;
 
 import gameWorld.GameWorld;
+import gameWorld.Room;
+import gameWorld.StartRoom;
 import gameobjects.Hero;
 import libraries.StdDraw;
 import libraries.Timer;
@@ -16,12 +18,19 @@ public class Main
 	public static long updateTime;
 	public static long renderTime;
 	public static long physicsTime;
+	public static Room[] rooms;
 
 	public static void main(String[] args)
 	{
 		// Hero, world and display initialisation.
 		Hero isaac = new Hero(RoomInfos.POSITION_CENTER_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 3,0);
-		GameWorld world = new GameWorld(isaac);				
+
+		rooms = new Room[2];
+
+		rooms[0] = new StartRoom(isaac);
+		rooms[1] = new Room(isaac);
+
+		GameWorld world = new GameWorld(isaac, rooms[1]);				
 		initializeDisplay();
 
 		// Main loop of the game
