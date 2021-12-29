@@ -1474,7 +1474,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * Drawing images.
 	 ***************************************************************************/
 	// get an image from the given filename
-	private static Image getImage(String filename)
+	public static Image getImage(String filename)
 	{
 		if (filename == null)
 			throw new IllegalArgumentException();
@@ -1700,6 +1700,42 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 		draw();
 	}
+
+
+	//CUSTOM
+	//WE MODIFIED STDDRAW TO DRAW IMAGES QUICKLY. The game begins to lag a lot
+	//When drawing stuff and this is because we reload the image each time we draw
+	//it. This one doesn't
+	public static void pictureIMG(double x, double y, Image img, double scaledWidth, double scaledHeight,
+			double degrees)
+	{
+		validate(x, "x");
+		validate(y, "y");
+		validate(scaledWidth, "scaled width");
+		validate(scaledHeight, "scaled height");
+		validate(degrees, "degrees");
+		validateNonnegative(scaledWidth, "scaled width");
+		validateNonnegative(scaledHeight, "scaled height");
+
+		double xs = scaleX(x);
+		double ys = scaleY(y);
+		double ws = factorX(scaledWidth);
+		double hs = factorY(scaledHeight);
+		if (ws < 0 || hs < 0)
+			throw new IllegalArgumentException("image is corrupt");
+		if (ws <= 1 && hs <= 1)
+			pixel(x, y);
+
+		offscreen.rotate(Math.toRadians(-degrees), xs, ys);
+		offscreen.drawImage(img, (int) Math.round(xs - ws / 2.0), (int) Math.round(ys - hs / 2.0),
+				(int) Math.round(ws), (int) Math.round(hs), null);
+		offscreen.rotate(Math.toRadians(+degrees), xs, ys);
+
+		draw();
+	}
+
+
+
 
 	/***************************************************************************
 	 * Drawing text.

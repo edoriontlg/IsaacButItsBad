@@ -47,7 +47,6 @@ public class GameWorld
 		currentRoom.processPhysics();
 		processPhysicsTears(Tears);
 		processPhysicsFly(Monstres);
-
 	}
 
 	public void drawGameObjects()
@@ -163,6 +162,7 @@ public class GameWorld
 
 				for (Monstre monstres : Monstres) {
 					if(monstres.getType()=="fly"){
+						
 					}
 				}
 		}

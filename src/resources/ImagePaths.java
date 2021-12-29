@@ -28,7 +28,7 @@ public class ImagePaths
 
 	public static final String CLOSED_DOOR = "images/closed_door.png";
 	public static final String OPENED_DOOR = "images/opened_door.png";
-	public static final String WALL = "images/black_square.png";
+	public static final String WALL2 = "images/black_square.png";
 
 	public static final String BLOOD_OF_THE_MARTYR = "images/Blood_of_the_martyr.png";
 	public static final String PENTAGRAM = "images/Pentagram.png";
@@ -43,12 +43,6 @@ public class ImagePaths
 	public static final String LOSE_SCREEN = "images/lose.png";
 
 	public static final String BACKGROUND_TILE_1 = "images/BackgroundTile1.png";
-	public static final String CORNER_UP_RIGHT = "images/CornerUpRight.png";
-	public static final String CORNER_UP_LEFT = "images/CornerUpLeft.png";
-	public static final String CORNER_BOTTOM_RIGHT = "images/CornerBottomRight.png";
-	public static final String CORNER_BOTTOM_LEFT = "images/CornerBottomLeft.png";
-	public static final String WALL_TOP = "images/WallUp.png";
-	public static final String WALL_BOTTOM = "images/WallDown.png";
-	public static final String WALL_RIGHT = "images/WallRight.png";
-	public static final String WALL_LEFT = "images/WallLeft.png";
+	public static final String CORNER = "images/CornerUpRight.png";
+	public static final String WALL = "images/WallRIght.png";
 }
