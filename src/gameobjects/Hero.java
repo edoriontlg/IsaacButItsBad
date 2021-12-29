@@ -17,7 +17,7 @@ public class Hero {
 	private Vector2 size;
 	private String imagePath;
 	private double speed;
-	Vector2 direction;
+	private Vector2 direction;
 	private int life;
 	private int money;
 
@@ -31,13 +31,43 @@ public class Hero {
 		this.money = money;
 	}
 
-	public void updateGameObject() {
-		move();
+	public void updateGameObject(List<StaticEntity> entities) {
+		move(entities);
 	}
 
-	private void move() {
+	private void move(List<StaticEntity> entities) {
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
+		for (StaticEntity entity : entities) {
+			if (Physics.rectangleCollision(positionAfterMoving, size, entity.position, entity.size)) {
+				direction = new Vector2();
+				return;
+			}
+		}
+
+		double halfSize = size.getX()/2;
+		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
+
+		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES -1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES-1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
 		setPosition(positionAfterMoving);
 		direction = new Vector2();
 	}
@@ -48,31 +78,7 @@ public class Hero {
 		processPhysicsObjets(objectsToCollide);
 	}
 
-	private void processPhysicsSides() {
-		// We get the current pos
-		Vector2 newPos = new Vector2(getPosition());
-
-		// We check if it's valid (top and bottom) and if not we correct it
-		if (getPosition().getX() + (getSize().getX() / 2) > Room
-				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()) {
-			newPos.setX(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()
-					- (getSize().getX() / 2));
-		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
-			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
-		}
-
-		// We check if it's valid (left and right) and if not we correct it
-		if (getPosition().getY() + (getSize().getX() / 2) > Room
-				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()) {
-			newPos.setY(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()
-					- (getSize().getX() / 2));
-		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
-			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
-		}
-		if (newPos != getPosition())
-			setPosition(newPos);
-	}
-
+	//Collision with objects like hearts, gold, etc
 	public void processPhysicsObjets(List<ObjectOnGround> objectsToCollide) {
 		if (objectsToCollide != null) {
 			//We store the object we will need to delete

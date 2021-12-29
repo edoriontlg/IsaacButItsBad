@@ -2,8 +2,6 @@ package gameobjects;
 
 import libraries.StdDraw;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import gameWorld.Room;
 import libraries.Physics;

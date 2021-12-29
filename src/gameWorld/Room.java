@@ -9,7 +9,6 @@ import gameobjects.StaticEntity;
 import gameobjects.Tear;
 import libraries.StdDraw;
 import libraries.Vector2;
-import resources.DisplaySettings;
 import resources.ImagePaths;
 import resources.RoomInfos;
 
@@ -29,6 +28,8 @@ public class Room
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+
+		//Temporary
 		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.HEART_PICKABLE));
 		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.6), RoomInfos.PICKABLE_SIZE, ImagePaths.HALF_HEART_PICKABLE));
 		ObjectPickable.add(new ObjectOnGround(new Vector2(0.1, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.COIN));
@@ -52,7 +53,7 @@ public class Room
 
 	private void makeHeroPlay()
 	{
-		hero.updateGameObject();
+		hero.updateGameObject(StaticEntities);
 	}
 
 	
