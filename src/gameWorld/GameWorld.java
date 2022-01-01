@@ -5,6 +5,7 @@ import java.util.List;
 
 import gameobjects.*;
 import libraries.StdDraw;
+import libraries.Vector2;
 import resources.Controls;
 import resources.HeroInfos;
 import resources.RoomInfos;
