@@ -17,12 +17,9 @@ public class Hero {
 	private Vector2 size;
 	private String imagePath;
 	private double speed;
-	Vector2 direction;
+	private Vector2 direction;
 	private int life;
 	private int money;
-
-	private Vector2 lastPosition;
-	private Vector2 lastNormalizedDirection;
 
 	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money) {
 		this.position = position;
@@ -34,106 +31,54 @@ public class Hero {
 		this.money = money;
 	}
 
-	public void updateGameObject() {
-		move();
+	public void updateGameObject(List<StaticEntity> entities) {
+		move(entities);
 	}
 
-	private void move() {
+	private void move(List<StaticEntity> entities) {
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
-		lastPosition = getPosition();
+		for (StaticEntity entity : entities) {
+			if (Physics.rectangleCollision(positionAfterMoving, size, entity.position, entity.size)) {
+				direction = new Vector2();
+				return;
+			}
+		}
+
+		double halfSize = size.getX()/2;
+		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
+
+		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES -1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES-1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
 		setPosition(positionAfterMoving);
-		lastNormalizedDirection = normalizedDirection;
 		direction = new Vector2();
 	}
 
-	public void processPhysics(List<StaticEntity> entitiesToCollide, List<ObjectOnGround> objectsToCollide) {
+	public void processPhysics(List<ObjectOnGround> objectsToCollide) {
 		//We need to do this one first, if done after it could 
 		//Make us go into the walls
-		processPhysicsEntities(entitiesToCollide);
-		processPhysicsSides();
 		processPhysicsObjets(objectsToCollide);
 	}
 
-	private void processPhysicsSides() {
-		// We get the current pos
-		Vector2 newPos = new Vector2(getPosition());
-
-		// We check if it's valid (top and bottom) and if not we correct it
-		if (getPosition().getX() + (getSize().getX() / 2) > Room
-				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()) {
-			newPos.setX(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY()
-					- (getSize().getX() / 2));
-		} else if (getPosition().getX() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getY()) {
-			newPos.setX(Room.positionFromTileIndex(0, 0).getY() + (getSize().getX() / 2));
-		}
-
-		// We check if it's valid (left and right) and if not we correct it
-		if (getPosition().getY() + (getSize().getX() / 2) > Room
-				.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()) {
-			newPos.setY(Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX()
-					- (getSize().getX() / 2));
-		} else if (getPosition().getY() - (getSize().getX() / 2) < Room.positionFromTileIndex(0, 0).getX()) {
-			newPos.setY(Room.positionFromTileIndex(0, 0).getX() + (getSize().getX() / 2));
-		}
-		if (newPos != getPosition())
-			setPosition(newPos);
-	}
-
-	private void processPhysicsEntities(List<StaticEntity> entitiesToCollide) {
-		
-		// Yes, by doing this if two static entities are to close to each other
-		// you will completely ignore the physics of one of them.
-		// Just dont put objects to close.
-		boolean isMoveValid = true;
-
-		if (entitiesToCollide != null) {
-
-			for (StaticEntity entity : entitiesToCollide) {
-
-				if (entity == null)
-					continue;
-
-				// Movement correction (yes, we could technically do this directly inside the
-				// move function
-				// But I find it easier if we put every physic check inside the same function).
-				isMoveValid = !Physics.rectangleCollision(getPosition(), getSize(), entity.getPosition(),
-						entity.getSize());
-				if (!isMoveValid) {
-
-					// Extract X and Y dir
-					Vector2 lastXMovement = new Vector2(lastNormalizedDirection.getX(), 0);
-					Vector2 lastYMovement = new Vector2(0, lastNormalizedDirection.getY());
-
-					// The corrected movement we will use (because last one was incorrect, cf If
-					// statement)
-					Vector2 correctedMovement = new Vector2(0, 0);
-
-					// Check if X movement is valid, if yes add it to the corrected movement
-					if (!Physics.rectangleCollision(lastPosition.addVector(lastXMovement), getSize(),
-							entity.getPosition(),
-							entity.getSize())) {
-						correctedMovement = correctedMovement.addVector(lastXMovement);
-					}
-
-					// Same for Y
-					if (!Physics.rectangleCollision(lastPosition.addVector(lastYMovement), getSize(),
-							entity.getPosition(),
-							entity.getSize())) {
-						correctedMovement = correctedMovement.addVector(lastYMovement);
-					}
-
-					// We correct the last position
-					Vector2 correctedPosition = lastPosition.addVector(correctedMovement);
-					
-					// Set it
-					setPosition(correctedPosition);
-					break;
-				}
-			}
-		}
-	}
-
+	//Collision with objects like hearts, gold, etc
 	public void processPhysicsObjets(List<ObjectOnGround> objectsToCollide) {
 		if (objectsToCollide != null) {
 			//We store the object we will need to delete
@@ -181,6 +126,7 @@ public class Hero {
 				0);
 				StdDraw.setPenColor(StdDraw.WHITE);
 				StdDraw.text(0.1,0.9, this.money+"");
+				
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.WHITE);
 			StdDraw.text(0.15, 0.95, "x:"
@@ -192,11 +138,6 @@ public class Hero {
 
 			StdDraw.setPenColor(StdDraw.GREEN);
 			StdDraw.setPenRadius(0.004);
-
-			StdDraw.line(getPosition().getX(),
-					getPosition().getY(),
-					getPosition().getX() + getPosition().subVector(lastPosition).getX(),
-					getPosition().getY() + getPosition().subVector(lastPosition).getY());
 		}
 
 		// If health not empty, draw hearts, else draw empty heart

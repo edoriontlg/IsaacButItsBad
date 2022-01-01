@@ -2,36 +2,36 @@ package gameWorld;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.*;
 import gameobjects.Hero;
 import gameobjects.ObjectOnGround;
 import gameobjects.StaticEntity;
 import gameobjects.Tear;
 import libraries.StdDraw;
 import libraries.Vector2;
-import resources.DisplaySettings;
 import resources.ImagePaths;
 import resources.RoomInfos;
 
 public class Room
 {
 	private Hero hero;
-	private String backgroundTile;
-	private List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
-	private List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
+	private Image BACKGROUND_TILE;
+	private Image WALL;
+	private Image CORNER;
+
+	//We make it protected so other rooms can use it, but not other classes.
+	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
+	protected List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
 
 
 	public Room(Hero hero)
 	{
 		this.hero = hero;
-		this.backgroundTile = ImagePaths.BACKGROUND_TILE_1;
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.HEART_PICKABLE));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.5, 0.6), RoomInfos.PICKABLE_SIZE, ImagePaths.HALF_HEART_PICKABLE));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.1, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.COIN));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.2, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.NICKEL));
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.7, 0.8), RoomInfos.PICKABLE_SIZE, ImagePaths.DIME));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(5, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(4, 6), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(8, 2), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
+		this.WALL = StdDraw.getImage(ImagePaths.WALL);
+		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+
+		//Temporary
 	}
 
 
@@ -47,12 +47,12 @@ public class Room
 
 	private void makeHeroPlay()
 	{
-		hero.updateGameObject();
+		hero.updateGameObject(StaticEntities);
 	}
 
 	
 	public void processPhysics() {
-		hero.processPhysics(StaticEntities, ObjectPickable);
+		hero.processPhysics(ObjectPickable);
 	}
 	
 
@@ -67,7 +67,7 @@ public class Room
 			for (int j = 1; j < RoomInfos.NB_TILES - 1; j++)
 			{
 				Vector2 position = positionFromTileIndex(i, j);
-				StdDraw.picture(position.getX(), position.getY(), backgroundTile, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+				StdDraw.pictureIMG(position.getX(), position.getY(), this.BACKGROUND_TILE, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
 				//StdDraw.filledRectangle(position.getX(), position.getY(), RoomInfos.HALF_TILE_SIZE.getX(), RoomInfos.HALF_TILE_SIZE.getY());
 			}
 		}
@@ -75,21 +75,21 @@ public class Room
 		//Draw walls
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i ++) {
 			Vector2 position = positionFromTileIndex(0, i);
-			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
 			position = positionFromTileIndex(RoomInfos.NB_TILES - 1, i);
-			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
 			position = positionFromTileIndex(i, 0);
-			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_BOTTOM, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
 			position = positionFromTileIndex(i, RoomInfos.NB_TILES - 1);
-			StdDraw.picture(position.getX(), position.getY(), ImagePaths.WALL_TOP, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
 		}
 
 
 		//Draw corners
-		StdDraw.picture(positionFromTileIndex(0, 0).getX(), positionFromTileIndex(0, 0).getY(), ImagePaths.CORNER_BOTTOM_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
-		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), ImagePaths.CORNER_BOTTOM_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
-		StdDraw.picture(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), ImagePaths.CORNER_UP_RIGHT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
-		StdDraw.picture(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), ImagePaths.CORNER_UP_LEFT, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT);
+		StdDraw.pictureIMG(positionFromTileIndex(0, 0).getX(), positionFromTileIndex(0, 0).getY(), this.CORNER, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
+		StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), this.CORNER, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
+		StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
+		StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(), positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
 
 
 		hero.drawGameObject();
