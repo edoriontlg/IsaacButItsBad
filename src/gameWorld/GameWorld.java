@@ -5,9 +5,12 @@ import java.util.List;
 
 import gameobjects.*;
 import libraries.StdDraw;
+import libraries.Vector2;
 import resources.Controls;
 import resources.HeroInfos;
 import resources.RoomInfos;
+import libraries.Physics;
+
 
 public class GameWorld {
 	private Room currentRoom;
@@ -20,7 +23,7 @@ public class GameWorld {
 	public GameWorld(Hero hero, Room room) {
 		this.hero = hero;
 		currentRoom = new Room(hero);
-		Monstres.add(new Fly(new Vector2(0.5,0.5), RoomInfos.TILE_SIZE.scalarMultiplication(0.7),0.01, "images/Fly.png", 3, "fly"));
+		Monstres.add(new Fly(new Vector2(0.6,0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5),0.01, "images/Fly.png", 3, "fly"));
 
 		currentRoom = room;
 	}
@@ -42,7 +45,7 @@ public class GameWorld {
 	public void processPhysics() {
 		currentRoom.processPhysics();
 		processPhysicsTears(Tears);
-		processPhysicsFly(Monstres);
+		processPhysicsFly(Monstres, Tears);
 	}
 
 	public void drawGameObjects() {
@@ -58,7 +61,7 @@ public class GameWorld {
 			for (Monstre monstre : Monstres) {
 				if (monstre != null)
 					monstre.drawGameObject();
-				monstre.updateGameObject();
+					monstre.updateGameObject();
 			}
 		}
 	}
@@ -146,22 +149,51 @@ public class GameWorld {
 
 	}
 
-	public void processPhysicsFly(List<Monstre> Monstres) {
+	public void processPhysicsFly(List<Monstre> Monstres, List<Tear> Tears) {
 		if (Monstres != null) {
 			// We store the object we will need to delete
 			List<Monstre> monstreToRemove = new ArrayList<Monstre>();
-
-			for (Monstre monstres : Monstres) {
-				if (monstres.getType() == "fly") {
-
+			List<Tear> tearToRemove = new ArrayList<Tear>();
 
 			
+				for (Monstre monstres : Monstres) {
+					if (monstres.getType() == "fly") {
+						Vector2 monstrePos = new Vector2(monstres.getPosition());
+						Vector2 heroPos = new Vector2(hero.getPosition());
+						Vector2 direction = new Vector2();
+						direction.setX(heroPos.getX()-monstrePos.getX());
+						direction.setY(heroPos.getY()-monstrePos.getY());	
+						direction.euclidianNorm();
+						monstres.setSpeed(0.005);
+						monstres.getDirection().setX(direction.getX());
+						monstres.getDirection().setY(direction.getY());
+						if(Tears != null){
+						for (Tear larme : Tears) {
+							if(Physics.rectangleCollision(larme.getPosition(), larme.getSize(), monstres.getPosition(), monstres.getSize())){
+								monstreToRemove.add(monstres);
+								tearToRemove.add(larme);
+						}
+					}
+				}
+						
+					
+			
+					}
+				}
+			
+			for (Monstre monstres : monstreToRemove) {
+				Monstres.remove(monstres);
+				
 			}
-		}
+			for (Tear larme : tearToRemove) {
+				Tears.remove(larme);
+			}
 	
-	}}
+		}
+	}	
 
 	public void UpdateRoom(Room newRoom) {
 		currentRoom = newRoom;
 	}
+	
 }
