@@ -45,13 +45,6 @@ public class Room {
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
 
-		Monstres.add(new Fly(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01 / 8,
-				"images/Fly.png", 3, "fly"));
-		Monstres.add(new Spider(new Vector2(0.6, 0.6), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.07,
-				"images/Spider.png", 5, "spider"));
-		Monstres.add(new Gaper(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.1,
-				"images/Gaper.png", 20, "gaper"));
-
 		// Temporary
 	}
 

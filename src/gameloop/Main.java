@@ -3,6 +3,7 @@ package gameloop;
 import gameWorld.GameWorld;
 import gameWorld.Room;
 import gameWorld.StartRoom;
+import gameWorld.TestRoom;
 import gameobjects.Hero;
 import libraries.StdDraw;
 import libraries.Timer;
@@ -25,12 +26,13 @@ public class Main
 		// Hero, world and display initialisation.
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0);
 
-		rooms = new Room[2];
+		rooms = new Room[3];
 
 		rooms[0] = new StartRoom(isaac);
 		rooms[1] = new Room(isaac);
+		rooms[2] = new TestRoom(isaac);
 
-		GameWorld world = new GameWorld(isaac, rooms[1]);				
+		GameWorld world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
 
 		// Main loop of the game

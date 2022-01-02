@@ -31,8 +31,6 @@ public class Physics
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.rectangle(pos1.getX(), pos1.getY(),  size1.getX(),  size1.getY());
-			StdDraw.setPenColor(StdDraw.BLUE);
-			StdDraw.rectangle(pos2.getX(), pos2.getY(),  size2.getX(),  size2.getY());
 		}
 		
 		return !(tooFarLeft || tooFarRight || tooFarAbove || tooFarBelow);
