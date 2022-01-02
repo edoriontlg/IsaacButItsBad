@@ -23,7 +23,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		// Hero, world and display initialisation.
-		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 3,0);
+		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0);
 
 		rooms = new Room[2];
 

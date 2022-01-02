@@ -6,6 +6,7 @@ public class ImagePaths
 	public static final String MAGDALENE = "images/Magdalene.png";
 
 	public static final String TEAR = "images/tear.png";
+	public static final String PROJ = "images/proj.png";
 
 	public static final String POOP = "images/Poop.png";
 	public static final String ROCK = "images/Rock.png";

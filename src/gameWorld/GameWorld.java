@@ -220,7 +220,7 @@ public class GameWorld {
 
 						if (System.currentTimeMillis() - projTime > 1700 || System.currentTimeMillis() - projTime < 0) {	
 							Projectile projo = new Projectile(monstrePos, RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-							HeroInfos.ISAAC_SPEED, "images/tear.png");
+							HeroInfos.ISAAC_SPEED, "images/proj.png");
 
 							Projs.add(projo);
 							projo.getDirection().setX(directionFly.getX());
@@ -259,10 +259,10 @@ public class GameWorld {
 							monstres.getDirection().setY(directionGaper.getY());
 							inTime = System.currentTimeMillis();
 							}
-					if (System.currentTimeMillis() - proj2Time > 1000 || System.currentTimeMillis() - proj2Time < 0) {
+					if (System.currentTimeMillis() - proj2Time > 700 || System.currentTimeMillis() - proj2Time < 0) {
 								Vector2 dir = new Vector2();	
 								Projectile projo = new Projectile(monstres.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-								0.02, "images/tear.png");
+								0.01, "images/proj.png");
 	
 								dir.setX(hero.getPosition().getX()-monstres.getPosition().getX());
 								dir.setY(hero.getPosition().getY()-monstres.getPosition().getY());	
@@ -299,13 +299,8 @@ public class GameWorld {
 								if(Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(), hero.getSize())){
 									hero.setLife(hero.getLife()-1);
 									projToRemove.add(proj);
-								
 								}
 							}
-								for (Projectile proj : projToRemove) {
-									Projs.remove(proj);
-								}
-							
 
 
 								//If the hero is touch by a monster he lose 1 life point
@@ -313,11 +308,7 @@ public class GameWorld {
 									hero.setLife(hero.getLife()-1);}
 					
 				}
-				
-						
-					
-			
-					
+								
 				}
 			
 			for (Monstre monstres : monstreToRemove) {
@@ -326,6 +317,9 @@ public class GameWorld {
 			}
 			for (Tear larme : tearToRemove) {
 				Tears.remove(larme);
+			}
+			for (Projectile proj : projToRemove) {
+				Projs.remove(proj);
 			}
 	
 		}
