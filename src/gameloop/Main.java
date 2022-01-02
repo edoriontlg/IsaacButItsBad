@@ -1,5 +1,7 @@
 package gameloop;
 
+import javax.swing.text.JTextComponent.KeyBinding;
+
 import gameWorld.GameWorld;
 import gameWorld.Room;
 import gameWorld.StartRoom;
@@ -11,6 +13,7 @@ import resources.DisplaySettings;
 import resources.HeroInfos;
 import resources.ImagePaths;
 import resources.RoomInfos;
+import libraries.Keybinding;
 
 public class Main
 {
@@ -20,6 +23,7 @@ public class Main
 	public static long renderTime;
 	public static long physicsTime;
 	public static Room[] rooms;
+	public static GameWorld world;
 
 	public static void main(String[] args)
 	{
@@ -32,7 +36,7 @@ public class Main
 		rooms[1] = new Room(isaac);
 		rooms[2] = new TestRoom(isaac);
 
-		GameWorld world = new GameWorld(isaac, rooms[2]);				
+		world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
 
 		// Main loop of the game
@@ -61,6 +65,14 @@ public class Main
 			StdDraw.text(0.1, 0.08, "PT :" + Math.round(physicsTime / 10000d) / 100d);
 			StdDraw.text(0.1, 0.11, "RT :" + Math.round(renderTime / 10000d) / 100d);
 		}
+
+		//if (StdDraw.isKeyPressed() {
+		//	world.UpdateRoom(rooms[0]);
+		//} else if (StdDraw.isKeyPressed()) { 
+		//	world.UpdateRoom(rooms[1]);
+		//} else if (StdDraw.isKeyPressed()) { 
+		//	world.UpdateRoom(rooms[2]);
+		//}
 
 		StdDraw.show();
 		Timer.waitToMaintainConstantFPS();

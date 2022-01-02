@@ -95,15 +95,6 @@ public class GameWorld {
 			}
 
 		}
-
-		//if (currentRoom.Tears != null) {
-		//	for (Tear larme : currentRoom.Tears) {
-		//		if (larme != null) {
-		//			larme.drawGameObject();
-		//			larme.updateGameObject();
-		//		}
-		//	}
-		//}
 	}
 
 	
@@ -111,5 +102,4 @@ public class GameWorld {
 	public void UpdateRoom(Room newRoom) {
 		currentRoom = newRoom;
 	}
-
 }
