@@ -13,4 +13,5 @@ public class RoomInfos
 	
 	public static final Vector2 POSITION_CENTER_OF_ROOM = new Vector2(0.5, 0.5);
 	public static final Vector2 POSITION_UP_OF_ROOM = new Vector2(0.4, 0.7);
+	public static final Vector2 POSITION_DOWN_OF_ROOM = new Vector2(0.5, 0.2);
 }

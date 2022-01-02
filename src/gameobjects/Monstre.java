@@ -2,6 +2,8 @@ package gameobjects;
 
 import libraries.StdDraw;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import gameWorld.Room;
 import libraries.Physics;
@@ -32,16 +34,47 @@ public class Monstre {
         this.type = type;
 	}
 
-    public void updateGameObject() {
-		move();
+    public void updateGameObject(List<StaticEntity> entities) {
+		move(entities);
 	}
+	
 
-	private void move() {
+	private void move(List<StaticEntity> entities) {
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
-		lastPosition = getPosition();
+		if(getType()=="fly"){
+		for (StaticEntity entity : entities) {
+			if (Physics.rectangleCollision(positionAfterMoving, size, entity.position, entity.size)) {
+				direction = new Vector2();
+				return;
+			}
+		}
+	}
+
+		double halfSize = size.getX()/2;
+		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
+
+		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES -1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES-1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
+		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
+			direction = new Vector2();
+			return;
+		}
+
 		setPosition(positionAfterMoving);
-		lastNormalizedDirection = normalizedDirection;
 		direction = new Vector2();
 	}
 
