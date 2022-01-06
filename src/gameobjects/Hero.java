@@ -11,6 +11,7 @@ import libraries.Vector2;
 import resources.DisplaySettings;
 import resources.ImagePaths;
 import resources.RoomInfos;
+import gameobjects.Equipments;
 
 public class Hero {
 	private Vector2 position;
@@ -19,6 +20,7 @@ public class Hero {
 	private double speed;
 	private Vector2 direction;
 	private int life;
+	private boolean lifeMax = false;
 	private int money;
 
 	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money) {
@@ -87,13 +89,18 @@ public class Hero {
 			//For each, if collision we do something then delete it
 			for (ObjectOnGround obj : objectsToCollide) {
 				if (obj != null && Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
+					if(obj.getImagePath()=="images/hp_up.png"){
+						this.life = 8;
+						this.lifeMax =true;
+						objToRemove.add(obj);
+					}
 					if(obj.getImagePath()=="images/Red_Heart.png"){
-						if(this.life<5){
+						if(this.life<5 || obj.getImagePath()=="images/hp_up.png" && this.life<7){
 							this.life += 2;
 							objToRemove.add(obj);}
 				}
 					else if(obj.getImagePath()=="images/Half_Red_Heart.png"){
-						if(this.life<6){
+						if(this.life<6 || obj.getImagePath()=="images/hp_up.png" && this.life<8){
 							this.life += 1;
 							objToRemove.add(obj);}
 					}
@@ -110,13 +117,16 @@ public class Hero {
 					
 				}
 			}
+			
 
 			//We ACTUALLY remove it (not inside the first loop, it messes up everything)
 			for (ObjectOnGround obj : objToRemove) {
 				objectsToCollide.remove(obj);
 			}
 		}
-	}
+		}
+	
+
 
 	
 	
@@ -141,7 +151,7 @@ public class Hero {
 		}
 
 		// If health not empty, draw hearts, else draw empty heart
-		if (this.life != 0) {
+		if (this.life > 0) {
 			// One full heart = 2 life
 
 			int fullHearts = (this.life - this.life % 2) / 2;
@@ -156,9 +166,25 @@ public class Hero {
 				StdDraw.picture(0.05 * (this.life / 2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
 			}
 
-		} else {
-			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			if(this.life <7 && lifeMax){
+				StdDraw.picture(0.2, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			}
+
+			if(this.life<5){
+				StdDraw.picture(0.15, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			}
+			if(this.life<3){
+				StdDraw.picture(0.1, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			}
+
 		}
+		else {
+			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			StdDraw.picture(0.1, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			StdDraw.picture(0.15, 0.95, ImagePaths.EMPTY_HEART_HUD);
+
+		}
+	
 
 	}
 
@@ -237,4 +263,6 @@ public class Hero {
 	public void setLife(int life) {
 		this.life = life;
 	}
+
+	
 }

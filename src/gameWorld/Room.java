@@ -29,7 +29,8 @@ public class Room {
 	// We make it protected so other rooms can use it, but not other classes.
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
 	protected List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
-
+	
+	
 	//Room specific, used for mobs etc
 	public List<Tear> Tears = new ArrayList<Tear>();
 	public List<Projectile> Projs = new ArrayList<Projectile>();
@@ -38,15 +39,20 @@ public class Room {
 	private long inTime = 0;
 	private long projTime = 0;
 	private long proj2Time = 0;
+	
+	
+
 
 	public Room(Hero hero) {
 		this.hero = hero;
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+		ObjectPickable.add(new ObjectOnGround(new Vector2(0.8,0.9), HeroInfos.ISAAC_SIZE, "images/hp_up.png"));
 
 		// Temporary
 	}
+	
 
 	/*
 	 * Make every entity that compose a room process one step
@@ -187,6 +193,7 @@ public class Room {
 						projo.getDirection().setX(dir.getX());
 						projo.getDirection().setY(dir.getY());
 						Projs.add(projo);
+						
 
 						proj2Time = System.currentTimeMillis();
 
@@ -212,6 +219,9 @@ public class Room {
 							tearToRemove.add(larme);
 						}
 					}
+				}
+			}
+
 					for (Projectile proj : Projs) {
 						if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
 								hero.getSize())) {
@@ -220,15 +230,11 @@ public class Room {
 						}
 					}
 
-					// If the hero is touch by a monster he lose 1 life point
-					if (Physics.rectangleCollision(hero.getPosition(), hero.getSize(), monstre.getPosition(),
-							monstre.getSize())) {
-						hero.setLife(hero.getLife() - 1);
-					}
+					
 
-				}
+				
 
-			}
+			
 
 			for (Monstre monstres : monstreToRemove) {
 				Monstres.remove(monstres);
@@ -290,7 +296,6 @@ public class Room {
 
 		hero.drawGameObject();
 		StdDraw.picture(0.05, 0.9, ImagePaths.COIN);
-
 		if (ObjectPickable != null) {
 			for (ObjectOnGround sol : ObjectPickable) {
 				if (sol != null)
