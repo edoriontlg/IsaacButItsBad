@@ -36,7 +36,7 @@ public class Main
 		rooms[1] = new Room(isaac);
 		rooms[2] = new TestRoom(isaac);
 
-		world = new GameWorld(isaac, rooms[0]);				
+		world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
 
 		int yes = 0;

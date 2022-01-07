@@ -96,15 +96,20 @@ public class Hero {
 			for (ObjectOnGround obj : objectsToCollide) {
 				if (obj != null
 						&& Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
-					if (obj.getImagePath() == "images/hp_up.png") {
-						this.life = HeroInfos.MAX_UP_LIFE;
-						this.lifeMax = true;
-						objToRemove.add(obj);
+					if(getMoney()>=10){
+						if (obj.getImagePath() == "images/hp_up.png") {
+							this.life = HeroInfos.MAX_UP_LIFE;
+							this.lifeMax = true;
+							objToRemove.add(obj);
+							setMoney(getMoney()-10);
 					}
+					
 					if (obj.getImagePath() == "images/Blood_of_the_martyr.png") {
 						this.attack += 1;
 						objToRemove.add(obj);
+						setMoney(getMoney()-10);
 					}
+				}
 					if (obj.getImagePath() == "images/Red_Heart.png") {
 						if (this.life < HeroInfos.MAX_LIFE - 1 || lifeMax && this.life < HeroInfos.MAX_UP_LIFE - 1) {
 							this.life += 2;
@@ -296,6 +301,13 @@ public class Hero {
 
 	public int getAttack() {
 		return this.attack;
+	}
+	public void setAttack(int attack){
+		this.attack =attack;
+	}
+
+	public void setLifeMax(boolean lifeMax){
+		this.lifeMax = lifeMax;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.awt.*;
 import gameobjects.Fly;
 import gameobjects.Gaper;
 import gameobjects.Hero;
+import gameobjects.Magasin;
 import gameobjects.Monstre;
 import gameobjects.ObjectOnGround;
 import gameobjects.Projectile;
@@ -69,6 +70,8 @@ public class Room {
 					larme.updateGameObject();
 			}
 		}
+
+		
 	}
 
 	public void processPhysics() {
@@ -253,6 +256,14 @@ public class Room {
 					proj.drawGameObject();
 			}
 		}
+
+		StdDraw.picture(0.5,0.8,"images/Cain.png");
+		StdDraw.text(0.55,0.6,"10");
+		StdDraw.picture(0.6, 0.6, ImagePaths.COIN);
+		StdDraw.text(0.35,0.6,"10");
+		StdDraw.picture(0.4, 0.6, ImagePaths.COIN);
+
+		
 	}
 
 	public void removeMonster() {
