@@ -12,12 +12,12 @@ public class Projectile {
 	private Vector2 direction;
 
 
-    public Projectile(Vector2 position, Vector2 size, double speed, String imagePath){
+    public Projectile(Vector2 position, Vector2 size, double speed, String imagePath, Vector2 direction){
         this.position = position;
         this.size = size;
         this.speed = speed;
         this.imagePath = imagePath;
-        this.direction = new Vector2();
+        this.direction = direction;
     }
 
     public void updateGameObject() {
@@ -26,8 +26,8 @@ public class Projectile {
 
 	private void move() {
 		Vector2 normalizedDirection = getNormalizedDirection();
-		Vector2 positionAfterShooting = getPosition().addVector(normalizedDirection);
-		setPosition(positionAfterShooting);
+		Vector2 newPosition = getPosition().addVector(normalizedDirection.scalarMultiplication(speed));
+		setPosition(newPosition);
 	}
 
     public void drawGameObject() {
@@ -40,22 +40,6 @@ public class Projectile {
             StdDraw.setPenRadius(0.002);
             StdDraw.rectangle(getPosition().getX(), getPosition().getY(), getSize().getX() / 2d, getSize().getY() / 2d);}       
     }
-
-    public void shootUpNext() {
-		getDirection().addY(1);
-	}
-
-	public void shootDownNext() {
-		getDirection().addY(-1);
-	}
-
-	public void shootLeftNext() {
-		getDirection().addX(-1);
-	}
-
-	public void shootRightNext() {
-		getDirection().addX(1);
-	}
 
 
     public Vector2 getPosition() {

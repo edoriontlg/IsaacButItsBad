@@ -16,7 +16,7 @@ public class TestRoom extends Room {
         super(hero);
 
 
-		Monstres.add(new Fly(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01 / 8,
+		monstres.add(new Fly(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01,
 				"images/Fly.png", 3, "fly"));
 		//Monstres.add(new Spider(new Vector2(0.6, 0.6), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.07,
 				//"images/Spider.png", 5, "spider"));

@@ -12,84 +12,47 @@ import resources.DisplaySettings;
 import resources.ImagePaths;
 import resources.RoomInfos;
 
-public class Monstre {
-    private Vector2 position;
-	private Vector2 size;
+public abstract class Monstre {
+	protected Vector2 position;
+	protected Vector2 size;
 	private String imagePath;
-	private double speed;
+	protected double speed;
 	Vector2 direction;
 	private int life;
-    protected String type;
+	protected String type;
 
-    private Vector2 lastPosition;
-	private Vector2 lastNormalizedDirection;
-
-    public Monstre(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
+	public Monstre(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
 		this.imagePath = imagePath;
 		this.direction = new Vector2();
 		this.life = life;
-        this.type = type;
+		this.type = type;
 	}
 
-    public void updateGameObject(List<StaticEntity> entities) {
-		move(entities);
-	}
-	
-
-	private void move(List<StaticEntity> entities) {
-		Vector2 normalizedDirection = getNormalizedDirection();
-		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
-		if(getType()=="fly"){
-		for (StaticEntity entity : entities) {
-			if (Physics.rectangleCollision(positionAfterMoving, size, entity.position, entity.size)) {
-				direction = new Vector2();
-				return;
-			}
-		}
+	public void updateGameObject(List<StaticEntity> entities, Hero hero, List<Projectile> projectiles) {
+		move(entities, hero);
+		attack(projectiles, hero);
 	}
 
-		double halfSize = size.getX()/2;
-		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
+	public abstract void move(List<StaticEntity> entities, Hero hero);
 
-		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES -1, 0).getX() - tileHalfSize) {
-			direction = new Vector2();
-			return;
+	public abstract void attack(List<Projectile> projectiles, Hero hero);
+
+	public void drawGameObject() {
+		StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
+				0);
+
+		// Hitbox
+		if (DisplaySettings.DRAW_DEBUG_INFO) {
+			StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.setPenRadius(0.002);
+			StdDraw.rectangle(getPosition().getX(), getPosition().getY(), getSize().getX() / 2d, getSize().getY() / 2d);
 		}
-
-		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
-			direction = new Vector2();
-			return;
-		}
-
-		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES-1).getY() - tileHalfSize) {
-			direction = new Vector2();
-			return;
-		}
-
-		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
-			direction = new Vector2();
-			return;
-		}
-
-		setPosition(positionAfterMoving);
-		direction = new Vector2();
 	}
 
-    public void drawGameObject() {
-        StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
-                0);
-
-        //Hitbox
-        if (DisplaySettings.DRAW_DEBUG_INFO) {
-            StdDraw.setPenColor(StdDraw.RED);
-            StdDraw.setPenRadius(0.002);
-            StdDraw.rectangle(getPosition().getX(), getPosition().getY(), getSize().getX() / 2d, getSize().getY() / 2d);} 
-    }
-
-	public Vector2 getNormalizedDirection() {
+	protected Vector2 getNormalizedDirection() {
 		Vector2 normalizedVector = new Vector2(direction);
 		normalizedVector.euclidianNormalize(speed);
 		return normalizedVector;
@@ -145,7 +108,8 @@ public class Monstre {
 	public void setLife(int life) {
 		this.life = life;
 	}
-    public String getType(){
-        return this.type;
-    }
+
+	public String getType() {
+		return this.type;
+	}
 }

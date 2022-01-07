@@ -12,10 +12,10 @@ import gameobjects.ObjectOnGround;
 import gameobjects.Projectile;
 import gameobjects.Spider;
 import gameobjects.StaticEntity;
-import gameobjects.Tear;
 import libraries.Physics;
 import libraries.StdDraw;
 import libraries.Vector2;
+import resources.Controls;
 import resources.HeroInfos;
 import resources.ImagePaths;
 import resources.RoomInfos;
@@ -29,57 +29,62 @@ public class Room {
 	// We make it protected so other rooms can use it, but not other classes.
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
 	protected List<ObjectOnGround> ObjectPickable = new ArrayList<ObjectOnGround>();
-	
-	
-	//Room specific, used for mobs etc
-	public List<Tear> Tears = new ArrayList<Tear>();
-	public List<Projectile> Projs = new ArrayList<Projectile>();
-	public List<Monstre> Monstres = new ArrayList<Monstre>();
-	private long nextTime = 0;
-	private long inTime = 0;
-	private long projTime = 0;
-	private long proj2Time = 0;
-	
-	
 
+	// Room specific, used for mobs etc
+	public List<Projectile> tears = new ArrayList<Projectile>();
+	public List<Projectile> projectiles = new ArrayList<Projectile>();
+	public List<Monstre> monstres = new ArrayList<Monstre>();
+	private int cheatDmg = 0;
 
 	public Room(Hero hero) {
 		this.hero = hero;
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
-		ObjectPickable.add(new ObjectOnGround(new Vector2(0.8,0.9), HeroInfos.ISAAC_SIZE, "images/hp_up.png"));
 
 		// Temporary
 	}
-	
 
 	/*
 	 * Make every entity that compose a room process one step
 	 */
 	public void updateRoom() {
-		makeHeroPlay();
-	}
-
-	private void makeHeroPlay() {
 		hero.updateGameObject(StaticEntities);
+		for (Monstre monstre : monstres) {
+			monstre.updateGameObject(StaticEntities, hero, projectiles);
+		}
+
+		// We update the projectile positions
+		if (projectiles != null) {
+			for (Projectile proj : projectiles) {
+				if (proj != null)
+					proj.updateGameObject();
+			}
+		}
+
+		// Same for the tears
+		if (tears != null) {
+			for (Projectile larme : tears) {
+				if (larme != null)
+					larme.updateGameObject();
+			}
+		}
 	}
 
 	public void processPhysics() {
 		hero.processPhysics(ObjectPickable);
 		processPhysicsTears();
-		processPhysicsMonstre();
 		processPhysicsProjs();
+		processPhysicsMonstre();
 	}
 
-	
 	public void processPhysicsTears() {
-		if (Tears != null) {
+		if (tears != null) {
 			// We store the tear we will need to delete
-			List<Tear> tearToRemove = new ArrayList<Tear>();
+			List<Projectile> tearToRemove = new ArrayList<Projectile>();
 
 			// For each, if collision we do something then delete it
-			for (Tear larme : Tears) {
+			for (Projectile larme : tears) {
 				if (larme.getPosition().getX() > 0.9 || larme.getPosition().getX() < 0.1
 						|| larme.getPosition().getY() > 0.9 || larme.getPosition().getY() < 0.1) {
 					tearToRemove.add(larme);
@@ -87,23 +92,20 @@ public class Room {
 			}
 
 			// We ACTUALLY remove it (not inside the first loop, it messes up everything)
-			for (Tear larme : tearToRemove) {
-				Tears.remove(larme);
+			for (Projectile larme : tearToRemove) {
+				tears.remove(larme);
 			}
 		}
 
 	}
 
-	
-
-
 	public void processPhysicsProjs() {
-		if (Projs != null) {
+		if (projectiles != null) {
 			// We store the tear we will need to delete
 			List<Projectile> projToRemove = new ArrayList<Projectile>();
 
 			// For each, if collision we do something then delete it
-			for (Projectile proj : Projs) {
+			for (Projectile proj : projectiles) {
 				if (proj.getPosition().getX() > 0.9 || proj.getPosition().getX() < 0.1
 						|| proj.getPosition().getY() > 0.9 || proj.getPosition().getY() < 0.1) {
 					projToRemove.add(proj);
@@ -112,99 +114,22 @@ public class Room {
 
 			// We ACTUALLY remove it (not inside the first loop, it messes up everything)
 			for (Projectile proj : projToRemove) {
-				Projs.remove(proj);
+				projectiles.remove(proj);
 			}
 		}
 
 	}
 
 	public void processPhysicsMonstre() {
-		if (Monstres != null) {
+		if (monstres != null) {
 			// We store the object we will need to delete
 			List<Monstre> monstreToRemove = new ArrayList<Monstre>();
-			List<Tear> tearToRemove = new ArrayList<Tear>();
+			List<Projectile> tearToRemove = new ArrayList<Projectile>();
 			List<Projectile> projToRemove = new ArrayList<Projectile>();
 
-			for (Monstre monstres : Monstres) {
-				if (monstres.getType() == "fly") {
-					Vector2 monstrePos = monstres.getPosition();
-					Vector2 heroPos = hero.getPosition();
-					Vector2 directionFly = new Vector2();
-
-					// We create a Vector in the direction fo the hero
-					directionFly.setX(heroPos.getX() - monstrePos.getX());
-					directionFly.setY(heroPos.getY() - monstrePos.getY());
-					directionFly.euclidianNorm();
-
-					// We set the coordonnate of the monster with the direction
-					monstres.getDirection().setX(directionFly.getX());
-					monstres.getDirection().setY(directionFly.getY());
-
-					if (System.currentTimeMillis() - projTime > 1700 || System.currentTimeMillis() - projTime < 0) {
-						Projectile projo = new Projectile(monstrePos, RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-								HeroInfos.ISAAC_SPEED, "images/proj.png");
-
-						Projs.add(projo);
-						projo.getDirection().setX(directionFly.getX());
-						projo.getDirection().setY(directionFly.getY());
-
-						projTime = System.currentTimeMillis();
-
-					}
-				}
-
-				// We use a timer to make the spider pause between movement
-				if (System.currentTimeMillis() - nextTime > 750 || System.currentTimeMillis() - nextTime < 0) {
-					if (monstres.getType() == "spider") {
-						Vector2 directionSpider = new Vector2();
-						directionSpider.euclidianNorm();
-
-						// We choose with random the direction of the spider
-						directionSpider.setX(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-						directionSpider.setY(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-						monstres.getDirection().setX(directionSpider.getX());
-						monstres.getDirection().setY(directionSpider.getY());
-						nextTime = System.currentTimeMillis();
-					}
-				}
-
-				if (monstres.getType() == "gaper") {
-
-					if (System.currentTimeMillis() - inTime > 750 || System.currentTimeMillis() - inTime < 0) {
-						Vector2 directionGaper = new Vector2();
-						directionGaper.euclidianNorm();
-
-						// We choose with random the direction of the Gaper
-						directionGaper.setX(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-						directionGaper.setY(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-						monstres.getDirection().setX(directionGaper.getX());
-						monstres.getDirection().setY(directionGaper.getY());
-						inTime = System.currentTimeMillis();
-					}
-					if (System.currentTimeMillis() - proj2Time > 700 || System.currentTimeMillis() - proj2Time < 0) {
-						Vector2 dir = new Vector2();
-						Projectile projo = new Projectile(monstres.getPosition(),
-								RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-								0.01, "images/proj.png");
-
-						dir.setX(hero.getPosition().getX() - monstres.getPosition().getX());
-						dir.setY(hero.getPosition().getY() - monstres.getPosition().getY());
-						dir.euclidianNorm();
-						projo.getDirection().setX(dir.getX());
-						projo.getDirection().setY(dir.getY());
-						Projs.add(projo);
-						
-
-						proj2Time = System.currentTimeMillis();
-
-					}
-
-				}
-			}
-
-			if (Tears != null) {
-				for (Monstre monstre : Monstres) {
-					for (Tear larme : Tears) {
+			if (tears != null) {
+				for (Monstre monstre : monstres) {
+					for (Projectile larme : tears) {
 
 						// We check if the tear collide with a monster
 						if (Physics.rectangleCollision(larme.getPosition(), larme.getSize(), monstre.getPosition(),
@@ -212,8 +137,8 @@ public class Room {
 
 							// We take out 1 life point to the monster and check if he has 0 life point to
 							// remove it
-							monstre.setLife(monstre.getLife() - 1);
-							if (monstre.getLife() == 0) {
+							monstre.setLife(monstre.getLife() - hero.getAttack() - cheatDmg);
+							if (monstre.getLife() <= 0) {
 								monstreToRemove.add(monstre);
 							}
 							tearToRemove.add(larme);
@@ -222,29 +147,23 @@ public class Room {
 				}
 			}
 
-					for (Projectile proj : Projs) {
-						if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
-								hero.getSize())) {
-							hero.setLife(hero.getLife() - 1);
-							projToRemove.add(proj);
-						}
-					}
+			for (Projectile proj : projectiles) {
+				if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
+						hero.getSize())) {
+					hero.setLife(hero.getLife() - 1);
+					projToRemove.add(proj);
+				}
+			}
 
-					
-
-				
-
-			
-
-			for (Monstre monstres : monstreToRemove) {
-				Monstres.remove(monstres);
+			for (Monstre monstre : monstreToRemove) {
+				monstres.remove(monstre);
 
 			}
-			for (Tear larme : tearToRemove) {
-				Tears.remove(larme);
+			for (Projectile larme : tearToRemove) {
+				tears.remove(larme);
 			}
 			for (Projectile proj : projToRemove) {
-				Projs.remove(proj);
+				projectiles.remove(proj);
 			}
 
 		}
@@ -310,19 +229,16 @@ public class Room {
 			}
 		}
 
-		
-		if (Tears != null) {
-			for (Tear larme : Tears) {
+		if (tears != null) {
+			for (Projectile larme : tears) {
 				if (larme != null)
 					larme.drawGameObject();
-				larme.updateGameObject();
 			}
 		}
-		if (Monstres != null) {
-			for (Monstre monstre : Monstres) {
+		if (monstres != null) {
+			for (Monstre monstre : monstres) {
 				if (monstre != null)
 					monstre.drawGameObject();
-				monstre.updateGameObject(StaticEntities);
 			}
 		}
 		if (StaticEntities != null) {
@@ -331,13 +247,33 @@ public class Room {
 					entity.drawGameObject();
 			}
 		}
-		if (Projs != null) {
-			for (Projectile proj : Projs) {
+		if (projectiles != null) {
+			for (Projectile proj : projectiles) {
 				if (proj != null)
 					proj.drawGameObject();
-				proj.updateGameObject();
 			}
 		}
+	}
+
+	public void removeMonster() {
+
+		List<Monstre> monstreToRemove = new ArrayList<Monstre>();
+		for (Monstre monstre : monstres) {
+			monstreToRemove.add(monstre);
+		}
+		for (Monstre monstre : monstreToRemove) {
+			monstres.remove(monstre);
+		}
+
+	}
+
+	public void instantKill() {
+		if (cheatDmg == 0) {
+			cheatDmg = 1000;
+		} else {
+			cheatDmg = 0;
+		}
+
 	}
 
 	/**

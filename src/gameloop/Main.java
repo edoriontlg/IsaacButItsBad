@@ -28,7 +28,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		// Hero, world and display initialisation.
-		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0);
+		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0,1);
 
 		rooms = new Room[3];
 
@@ -36,9 +36,10 @@ public class Main
 		rooms[1] = new Room(isaac);
 		rooms[2] = new TestRoom(isaac);
 
-		world = new GameWorld(isaac, rooms[2]);				
+		world = new GameWorld(isaac, rooms[0]);				
 		initializeDisplay();
 
+		int yes = 0;
 		// Main loop of the game
 		while (!world.gameOver())
 		{

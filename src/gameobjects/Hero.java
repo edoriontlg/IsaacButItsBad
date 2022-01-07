@@ -8,10 +8,11 @@ import java.util.List;
 import gameWorld.Room;
 import libraries.Physics;
 import libraries.Vector2;
+import resources.Controls;
 import resources.DisplaySettings;
+import resources.HeroInfos;
 import resources.ImagePaths;
 import resources.RoomInfos;
-import gameobjects.Equipments;
 
 public class Hero {
 	private Vector2 position;
@@ -22,8 +23,10 @@ public class Hero {
 	private int life;
 	private boolean lifeMax = false;
 	private int money;
+	private long lastTime = 0;
+	private int attack;
 
-	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money) {
+	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money, int attack) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
@@ -31,6 +34,7 @@ public class Hero {
 		this.direction = new Vector2();
 		this.life = life;
 		this.money = money;
+		this.attack = attack;
 	}
 
 	public void updateGameObject(List<StaticEntity> entities) {
@@ -47,10 +51,11 @@ public class Hero {
 			}
 		}
 
-		double halfSize = size.getX()/2;
+		double halfSize = size.getX() / 2;
 		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
 
-		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES -1, 0).getX() - tileHalfSize) {
+		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX()
+				- tileHalfSize) {
 			direction = new Vector2();
 			return;
 		}
@@ -60,7 +65,8 @@ public class Hero {
 			return;
 		}
 
-		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES-1).getY() - tileHalfSize) {
+		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY()
+				- tileHalfSize) {
 			direction = new Vector2();
 			return;
 		}
@@ -75,68 +81,69 @@ public class Hero {
 	}
 
 	public void processPhysics(List<ObjectOnGround> objectsToCollide) {
-		//We need to do this one first, if done after it could 
-		//Make us go into the walls
+		// We need to do this one first, if done after it could
+		// Make us go into the walls
 		processPhysicsObjets(objectsToCollide);
 	}
 
-	//Collision with objects like hearts, gold, etc
-	public void processPhysicsObjets(List<ObjectOnGround> objectsToCollide) {
+	// Collision with objects like hearts, gold, etc
+	private void processPhysicsObjets(List<ObjectOnGround> objectsToCollide) {
 		if (objectsToCollide != null) {
-			//We store the object we will need to delete
+			// We store the object we will need to delete
 			List<ObjectOnGround> objToRemove = new ArrayList<ObjectOnGround>();
 
-			//For each, if collision we do something then delete it
+			// For each, if collision we do something then delete it
 			for (ObjectOnGround obj : objectsToCollide) {
-				if (obj != null && Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
-					if(obj.getImagePath()=="images/hp_up.png"){
-						this.life = 8;
-						this.lifeMax =true;
+				if (obj != null
+						&& Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
+					if (obj.getImagePath() == "images/hp_up.png") {
+						this.life = HeroInfos.MAX_UP_LIFE;
+						this.lifeMax = true;
 						objToRemove.add(obj);
 					}
-					if(obj.getImagePath()=="images/Red_Heart.png"){
-						if(this.life<5 || obj.getImagePath()=="images/hp_up.png" && this.life<7){
+					if (obj.getImagePath() == "images/Blood_of_the_martyr.png") {
+						this.attack += 1;
+						objToRemove.add(obj);
+					}
+					if (obj.getImagePath() == "images/Red_Heart.png") {
+						if (this.life < HeroInfos.MAX_LIFE - 1 || lifeMax && this.life < HeroInfos.MAX_UP_LIFE - 1) {
 							this.life += 2;
-							objToRemove.add(obj);}
-				}
-					else if(obj.getImagePath()=="images/Half_Red_Heart.png"){
-						if(this.life<6 || obj.getImagePath()=="images/hp_up.png" && this.life<8){
+							objToRemove.add(obj);
+						}
+					} else if (obj.getImagePath() == "images/Half_Red_Heart.png") {
+						if (this.life < HeroInfos.MAX_LIFE || lifeMax && this.life < HeroInfos.MAX_UP_LIFE) {
 							this.life += 1;
-							objToRemove.add(obj);}
+							objToRemove.add(obj);
+						}
 					}
 
-					else if(obj.getImagePath()=="images/Penny.png"){
-							this.money += 1;
-							objToRemove.add(obj);}
-					else if(obj.getImagePath()=="images/Nickel.png"){
-							this.money += 5;
-							objToRemove.add(obj);}
-					else if(obj.getImagePath()=="images/Dime.png"){
-							this.money += 10;
-							objToRemove.add(obj);}
-					
+					else if (obj.getImagePath() == "images/Penny.png") {
+						this.money += 1;
+						objToRemove.add(obj);
+					} else if (obj.getImagePath() == "images/Nickel.png") {
+						this.money += 5;
+						objToRemove.add(obj);
+					} else if (obj.getImagePath() == "images/Dime.png") {
+						this.money += 10;
+						objToRemove.add(obj);
+					}
+
 				}
 			}
-			
 
-			//We ACTUALLY remove it (not inside the first loop, it messes up everything)
+			// We ACTUALLY remove it (not inside the first loop, it messes up everything)
 			for (ObjectOnGround obj : objToRemove) {
 				objectsToCollide.remove(obj);
 			}
 		}
-		}
-	
-
-
-	
-	
+	}
 
 	public void drawGameObject() {
 		StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
 				0);
-				StdDraw.setPenColor(StdDraw.WHITE);
-				StdDraw.text(0.1,0.9, this.money+"");
-				
+		StdDraw.setPenColor(StdDraw.WHITE);
+		StdDraw.text(0.1, 0.9, this.money + "");
+
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.WHITE);
 			StdDraw.text(0.15, 0.95, "x:"
@@ -154,38 +161,53 @@ public class Hero {
 		if (this.life > 0) {
 			// One full heart = 2 life
 
-			int fullHearts = (this.life - this.life % 2) / 2;
-			boolean HalfHeart = this.life % 2 == 1;
+			int maxHealth = lifeMax ? HeroInfos.MAX_UP_LIFE : HeroInfos.MAX_LIFE;
+			int maxFullHearts = (maxHealth - maxHealth % 2) / 2;
 
-			for (double i = 0; i < fullHearts; i++) {
-				StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HEART_HUD);
-			}
+			for (int i = 0; i < maxFullHearts; i++) {
+				if ((i+1)*2 <= this.life) {
+					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HEART_HUD);
+				} else if ((i+1)*2 - 1 <= life) {
+					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HALF_HEART_HUD);
+				} else {
+					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.EMPTY_HEART_HUD);
+				}
 
-			// If health not even we draw the half heart
-			if (HalfHeart) {
-				StdDraw.picture(0.05 * (this.life / 2 + 1), 0.95, ImagePaths.HALF_HEART_HUD);
+				// StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HEART_HUD);
 			}
+		} else {
 
-			if(this.life <7 && lifeMax){
-				StdDraw.picture(0.2, 0.95, ImagePaths.EMPTY_HEART_HUD);
+			for (int i = 0; i < (lifeMax ? HeroInfos.MAX_UP_LIFE : HeroInfos.MAX_LIFE) / 2; i++) {
+				StdDraw.picture(0.05 + 0.05 * i, 0.95, ImagePaths.EMPTY_HEART_HUD);
 			}
+		}
+	}
 
-			if(this.life<5){
-				StdDraw.picture(0.15, 0.95, ImagePaths.EMPTY_HEART_HUD);
-			}
-			if(this.life<3){
-				StdDraw.picture(0.1, 0.95, ImagePaths.EMPTY_HEART_HUD);
+	public void processKeysForShooting(Room currentRoom) {
+		if (System.currentTimeMillis() - lastTime > 250 || System.currentTimeMillis() - lastTime < 0) {
+			if (StdDraw.isKeyPressed(Controls.shootUp)) {
+				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
+						0.1, "images/tear.png", new Vector2(0, 1));
+				currentRoom.tears.add(tear);
+				lastTime = System.currentTimeMillis();
+			} else if (StdDraw.isKeyPressed(Controls.shootDown)) {
+				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
+						0.1, "images/tear.png", new Vector2(0, -1));
+				currentRoom.tears.add(tear);
+				lastTime = System.currentTimeMillis();
+			} else if (StdDraw.isKeyPressed(Controls.shootRight)) {
+				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
+						0.1, "images/tear.png", new Vector2(1, 0));
+				currentRoom.tears.add(tear);
+				lastTime = System.currentTimeMillis();
+			} else if (StdDraw.isKeyPressed(Controls.shootLeft)) {
+				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
+						0.1, "images/tear.png", new Vector2(-1, 0));
+				currentRoom.tears.add(tear);
+				lastTime = System.currentTimeMillis();
 			}
 
 		}
-		else {
-			StdDraw.picture(0.05, 0.95, ImagePaths.EMPTY_HEART_HUD);
-			StdDraw.picture(0.1, 0.95, ImagePaths.EMPTY_HEART_HUD);
-			StdDraw.picture(0.15, 0.95, ImagePaths.EMPTY_HEART_HUD);
-
-		}
-	
-
 	}
 
 	/*
@@ -264,5 +286,16 @@ public class Hero {
 		this.life = life;
 	}
 
-	
+	public int getMoney() {
+		return this.money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public int getAttack() {
+		return this.attack;
+	}
+
 }

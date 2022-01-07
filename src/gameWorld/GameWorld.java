@@ -24,7 +24,8 @@ public class GameWorld {
 
 	public void processUserInput() {
 		processKeysForMovement();
-		processKeysForShooting();
+		hero.processKeysForShooting(currentRoom);
+		processKeysForCheating();
 	}
 
 	public boolean gameOver() {
@@ -63,41 +64,33 @@ public class GameWorld {
 		}
 	}
 
-	private void processKeysForShooting() {
-		if (System.currentTimeMillis() - lastTime > 250 || System.currentTimeMillis() - lastTime < 0) {
-			if (StdDraw.isKeyPressed(Controls.shootUp)) {
-				Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						HeroInfos.ISAAC_SPEED, "images/tear.png");
-				currentRoom.Tears.add(tear);
-				tear.shootUpNext();
-				lastTime = System.currentTimeMillis();
+	private void processKeysForCheating() {
+		if (StdDraw.isKeyPressed(Controls.invincible)) {
+			if (hero.getLife() != 1006) {
+				hero.setLife(hero.getLife() + 1000);
+			} else {
+				hero.setLife(6);
 			}
-			if (StdDraw.isKeyPressed(Controls.shootDown)) {
-				Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						HeroInfos.ISAAC_SPEED, "images/tear.png");
-				currentRoom.Tears.add(tear);
-				tear.shootDownNext();
-				lastTime = System.currentTimeMillis();
-			}
-			if (StdDraw.isKeyPressed(Controls.shootRight)) {
-				Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						HeroInfos.ISAAC_SPEED, "images/tear.png");
-				currentRoom.Tears.add(tear);
-				tear.shootRightNext();
-				lastTime = System.currentTimeMillis();
-			}
-			if (StdDraw.isKeyPressed(Controls.shootLeft)) {
-				Tear tear = new Tear(hero.getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						HeroInfos.ISAAC_SPEED, "images/tear.png");
-				currentRoom.Tears.add(tear);
-				tear.shootLeftNext();
-				lastTime = System.currentTimeMillis();
-			}
-
 		}
+		if (StdDraw.isKeyPressed(Controls.speed)) {
+			if (hero.getSpeed() != 0.04) {
+				hero.setSpeed(hero.getSpeed() + 0.03);
+			} else {
+				hero.setSpeed(0.01);
+			}
+		}
+		if (StdDraw.isKeyPressed(Controls.kill)) {
+			currentRoom.removeMonster();
+		}
+		if (StdDraw.isKeyPressed(Controls.piece)) {
+			hero.setMoney(hero.getMoney() + 10);
+		}
+		if (StdDraw.isKeyPressed(Controls.dmg)) {
+			currentRoom.instantKill();
+		}
+
 	}
 
-	
 
 	public void UpdateRoom(Room newRoom) {
 		currentRoom = newRoom;
