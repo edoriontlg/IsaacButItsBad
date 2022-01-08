@@ -7,6 +7,7 @@ import gameobjects.*;
 import libraries.StdDraw;
 import resources.Controls;
 import resources.HeroInfos;
+import resources.ImagePaths;
 import resources.RoomInfos;
 
 public class GameWorld {
@@ -29,6 +30,7 @@ public class GameWorld {
 	}
 
 	public boolean gameOver() {
+		
 		return false;
 	}
 
@@ -90,6 +92,8 @@ public class GameWorld {
 		}
 
 	}
+
+	
 
 
 	public void UpdateRoom(Room newRoom) {

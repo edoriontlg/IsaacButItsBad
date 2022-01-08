@@ -13,15 +13,15 @@ public class Spider extends Monstre {
     }
 
     public void move(List<StaticEntity> entity, Hero hero) {
-
+        
         // We use a timer to make the spider pause between movement
         if (System.currentTimeMillis() - lastTime > 750 || System.currentTimeMillis() - lastTime < 0) {
             Vector2 directionSpider = new Vector2();
-            directionSpider.euclidianNorm();
 
             // We choose with random the direction of the spider
             directionSpider.setX(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
             directionSpider.setY(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
+            directionSpider.euclidianNorm();
             this.getDirection().setX(directionSpider.getX());
             this.getDirection().setY(directionSpider.getY());
             lastTime = System.currentTimeMillis();

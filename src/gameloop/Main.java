@@ -38,13 +38,11 @@ public class Main
 
 		world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
-
-		int yes = 0;
 		// Main loop of the game
 		while (!world.gameOver())
 		{
 			processNextStep(world);
-		}
+		}	
 	}
 
 	private static void processNextStep(GameWorld world)
@@ -66,6 +64,7 @@ public class Main
 			StdDraw.text(0.1, 0.08, "PT :" + Math.round(physicsTime / 10000d) / 100d);
 			StdDraw.text(0.1, 0.11, "RT :" + Math.round(renderTime / 10000d) / 100d);
 		}
+		
 
 		//if (StdDraw.isKeyPressed() {
 		//	world.UpdateRoom(rooms[0]);
