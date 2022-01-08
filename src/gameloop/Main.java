@@ -36,10 +36,7 @@ public class Main
 
 		world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
-<<<<<<< Updated upstream
-=======
 		
->>>>>>> Stashed changes
 		// Main loop of the game
 		while (!world.gameOver())
 		{

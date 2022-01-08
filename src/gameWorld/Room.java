@@ -247,14 +247,11 @@ public class Room {
 			}
 		}
 
-<<<<<<< Updated upstream
-=======
 		//StdDraw.picture(0.5,0.8,"images/Cain.png");
 		//StdDraw.text(0.55,0.6,"10");
 		//StdDraw.picture(0.6, 0.6, ImagePaths.COIN);
 		//StdDraw.text(0.35,0.6,"10");
 		//StdDraw.picture(0.4, 0.6, ImagePaths.COIN);
->>>>>>> Stashed changes
 
 		
 	}

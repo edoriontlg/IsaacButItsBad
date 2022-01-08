@@ -18,23 +18,13 @@ public class TestRoom extends Room {
         super(hero);
 
 		
-<<<<<<< Updated upstream
 		
-		monstres.add(new Fly(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01,
-=======
-		Magasin.initializeShop(ObjectPickable);
 		monstres.add(new FlyBehavior(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01,
->>>>>>> Stashed changes
 				"images/Fly.png", 3, "fly"));
 		monstres.add(new SpiderBehavior(new Vector2(0.6, 0.6), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.07,
 				"images/Spider.png", 5, "spider"));
-<<<<<<< Updated upstream
-		//monstres.add(new Gaper(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.1,
-				//"images/Gaper.png", 20, "gaper"));
-=======
-		monstres.add(new GaperBehavior(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.002,
+		monstres.add(new GaperBehavior(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.1,
 				"images/Gaper.png", 20, "gaper"));
->>>>>>> Stashed changes
 		
     } 
 }
