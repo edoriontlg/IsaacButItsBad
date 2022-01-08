@@ -1,6 +1,5 @@
 package gameloop;
 
-import javax.swing.text.JTextComponent.KeyBinding;
 
 import gameWorld.GameWorld;
 import gameWorld.Room;
@@ -13,7 +12,6 @@ import resources.DisplaySettings;
 import resources.HeroInfos;
 import resources.ImagePaths;
 import resources.RoomInfos;
-import libraries.Keybinding;
 
 public class Main
 {
@@ -38,6 +36,10 @@ public class Main
 
 		world = new GameWorld(isaac, rooms[2]);				
 		initializeDisplay();
+<<<<<<< Updated upstream
+=======
+		
+>>>>>>> Stashed changes
 		// Main loop of the game
 		while (!world.gameOver())
 		{

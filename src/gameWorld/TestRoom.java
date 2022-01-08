@@ -1,13 +1,13 @@
 package gameWorld;
 
-import gameobjects.Fly;
-import gameobjects.Gaper;
 import gameobjects.Hero;
 import gameobjects.Magasin;
 import gameobjects.ObjectOnGround;
-import gameobjects.Spider;
 import gameobjects.StaticEntity;
 import libraries.Vector2;
+import monsters.FlyBehavior;
+import monsters.GaperBehavior;
+import monsters.SpiderBehavior;
 import resources.RoomInfos;
 import resources.ImagePaths;
 import libraries.StdDraw;
@@ -18,13 +18,23 @@ public class TestRoom extends Room {
         super(hero);
 
 		
+<<<<<<< Updated upstream
 		
 		monstres.add(new Fly(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01,
+=======
+		Magasin.initializeShop(ObjectPickable);
+		monstres.add(new FlyBehavior(new Vector2(0.6, 0.8), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.01,
+>>>>>>> Stashed changes
 				"images/Fly.png", 3, "fly"));
-		monstres.add(new Spider(new Vector2(0.6, 0.6), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.07,
+		monstres.add(new SpiderBehavior(new Vector2(0.6, 0.6), RoomInfos.TILE_SIZE.scalarMultiplication(0.5), 0.07,
 				"images/Spider.png", 5, "spider"));
+<<<<<<< Updated upstream
 		//monstres.add(new Gaper(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.1,
 				//"images/Gaper.png", 20, "gaper"));
+=======
+		monstres.add(new GaperBehavior(new Vector2(0.5, 0.5), RoomInfos.TILE_SIZE.scalarMultiplication(1.0), 0.002,
+				"images/Gaper.png", 20, "gaper"));
+>>>>>>> Stashed changes
 		
     } 
 }

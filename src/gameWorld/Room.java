@@ -4,22 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 
-import gameobjects.Fly;
-import gameobjects.Gaper;
-import gameobjects.Hero;
-import gameobjects.Magasin;
-import gameobjects.Monstre;
-import gameobjects.ObjectOnGround;
-import gameobjects.Projectile;
-import gameobjects.Spider;
-import gameobjects.StaticEntity;
-import libraries.Physics;
-import libraries.StdDraw;
-import libraries.Vector2;
-import resources.Controls;
-import resources.HeroInfos;
-import resources.ImagePaths;
-import resources.RoomInfos;
+import gameobjects.*;
+import libraries.*;
+import monsters.Monstre;
+import resources.*;
 
 public class Room {
 	private Hero hero;
@@ -259,6 +247,14 @@ public class Room {
 			}
 		}
 
+<<<<<<< Updated upstream
+=======
+		//StdDraw.picture(0.5,0.8,"images/Cain.png");
+		//StdDraw.text(0.55,0.6,"10");
+		//StdDraw.picture(0.6, 0.6, ImagePaths.COIN);
+		//StdDraw.text(0.35,0.6,"10");
+		//StdDraw.picture(0.4, 0.6, ImagePaths.COIN);
+>>>>>>> Stashed changes
 
 		
 	}

@@ -1,16 +1,14 @@
-package gameobjects;
+package monsters;
 
 import libraries.StdDraw;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import gameWorld.Room;
-import libraries.Physics;
+import gameobjects.Hero;
+import gameobjects.Projectile;
+import gameobjects.StaticEntity;
 import libraries.Vector2;
 import resources.DisplaySettings;
-import resources.ImagePaths;
-import resources.RoomInfos;
 
 public abstract class Monstre {
 	protected Vector2 position;

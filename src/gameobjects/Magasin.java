@@ -3,11 +3,8 @@ import java.util.List;
 
 import gameWorld.Room;
 import gameobjects.*;
-import libraries.Physics;
-import libraries.StdDraw;
-import libraries.Vector2;
-import resources.HeroInfos;
-import resources.ImagePaths;
+import libraries.*;
+import resources.*;
 
 public class Magasin {
     private List<ObjectOnGround> magasin;

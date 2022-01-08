@@ -1,14 +1,17 @@
-package gameobjects;
+package monsters;
 
 import java.util.List;
 
+import gameobjects.Hero;
+import gameobjects.Projectile;
+import gameobjects.StaticEntity;
 import libraries.Vector2;
 
-public class Spider extends Monstre {
+public class SpiderBehavior extends Monstre {
 
     private long lastTime = 0;
 
-    public Spider(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
+    public SpiderBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
         super(position, size, speed, imagePath, life, type);
     }
 

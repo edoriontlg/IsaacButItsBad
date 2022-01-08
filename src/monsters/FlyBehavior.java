@@ -1,26 +1,26 @@
-package gameobjects;
+package monsters;
 
 import java.util.List;
 
-import gameWorld.Room;
-import libraries.Physics;
+import gameobjects.Hero;
+import gameobjects.Projectile;
+import gameobjects.StaticEntity;
 import libraries.Vector2;
-import resources.HeroInfos;
 import resources.RoomInfos;
 import resources.MonstersInfo;
 
-public class Fly extends Monstre {
+public class FlyBehavior extends Monstre {
 
     public static long projectileLifetime = 0;
 
-    public Fly(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
+    public FlyBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
         super(position, size, speed, imagePath, life, type);
     }
 
     public void move(List<StaticEntity> entities, Hero hero) {
         Vector2 heroPos = hero.getPosition();
 
-        // We create a Vector in the direction fo the hero
+        // We create a Vector in the direction of the hero
         Vector2 directionFly = new Vector2(
                 heroPos.getX() - getPosition().getX(),
                 heroPos.getY() - getPosition().getY());
