@@ -25,11 +25,29 @@ public class Room {
 	public List<Monstre> monstres = new ArrayList<Monstre>();
 	private int cheatDmg = 0;
 
+	// Other rooms
+	public Room topRoom;
+	public Room bottomRoom;
+	public Room lefRoom;
+	public Room rightRoom;
+
 	public Room(Hero hero) {
 		this.hero = hero;
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+	}
+
+	public Room(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom) {
+		this.hero = hero;
+		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
+		this.WALL = StdDraw.getImage(ImagePaths.WALL);
+		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+
+		this.topRoom = topRoom;
+		this.bottomRoom = bottomRoom;
+		this.lefRoom = leftRoom;
+		this.rightRoom = rightRoom;
 	}
 
 	/*
@@ -57,11 +75,13 @@ public class Room {
 			}
 		}
 
-		
 	}
 
 	public void processPhysics() {
+		// First we check if the hero is picking any object
 		hero.processPhysics(ObjectPickable);
+
+		// Check if anything else is colliding
 		processPhysicsTears();
 		processPhysicsProjs();
 		processPhysicsMonstre();
@@ -93,9 +113,13 @@ public class Room {
 			// We store the tear we will need to delete
 			List<Projectile> projToRemove = new ArrayList<Projectile>();
 
-			// For each, if collision we do something then delete it
+			// We check if the projectile collide with the player or is offscreen
 			for (Projectile proj : projectiles) {
-				if (proj.getPosition().getX() > 0.9 || proj.getPosition().getX() < 0.1
+				if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
+						hero.getSize())) {
+					hero.setLife(hero.getLife() - 1);
+					projToRemove.add(proj);
+				} else if (proj.getPosition().getX() > 0.9 || proj.getPosition().getX() < 0.1
 						|| proj.getPosition().getY() > 0.9 || proj.getPosition().getY() < 0.1) {
 					projToRemove.add(proj);
 				}
@@ -114,7 +138,6 @@ public class Room {
 			// We store the object we will need to delete
 			List<Monstre> monstreToRemove = new ArrayList<Monstre>();
 			List<Projectile> tearToRemove = new ArrayList<Projectile>();
-			List<Projectile> projToRemove = new ArrayList<Projectile>();
 
 			if (tears != null) {
 				for (Monstre monstre : monstres) {
@@ -136,25 +159,12 @@ public class Room {
 				}
 			}
 
-			for (Projectile proj : projectiles) {
-				if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
-						hero.getSize())) {
-					hero.setLife(hero.getLife() - 1);
-					projToRemove.add(proj);
-				}
-			}
-
 			for (Monstre monstre : monstreToRemove) {
 				monstres.remove(monstre);
-
 			}
 			for (Projectile larme : tearToRemove) {
 				tears.remove(larme);
 			}
-			for (Projectile proj : projToRemove) {
-				projectiles.remove(proj);
-			}
-
 		}
 	}
 
@@ -202,10 +212,8 @@ public class Room {
 				positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
 				RoomInfos.TILE_HEIGHT, 90);
 
-
-		//Draw hero
+		// Draw hero
 		hero.drawGameObject();
-		
 
 		if (ObjectPickable != null) {
 			for (ObjectOnGround sol : ObjectPickable) {
@@ -239,10 +247,6 @@ public class Room {
 		}
 	}
 
-	
-	
-
-
 	public void removeMonster() {
 
 		monstres.clear();
@@ -255,7 +259,6 @@ public class Room {
 		} else {
 			cheatDmg = 0;
 		}
-
 	}
 
 	/**

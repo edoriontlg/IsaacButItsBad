@@ -48,7 +48,6 @@ public class GaperBehavior extends Monstre {
             projectiles.add(projo);
 
             lastTimeProj = System.currentTimeMillis();
-
         }
     }
 }
