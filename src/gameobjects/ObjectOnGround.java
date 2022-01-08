@@ -1,12 +1,7 @@
 package gameobjects;
 
-import libraries.StdDraw;
-
-
-
-
-import libraries.Vector2;
-import resources.DisplaySettings;
+import libraries.*;
+import resources.*;
 
 public class ObjectOnGround {
 

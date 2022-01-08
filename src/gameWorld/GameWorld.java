@@ -6,15 +6,11 @@ import java.util.List;
 import gameobjects.*;
 import libraries.StdDraw;
 import resources.Controls;
-import resources.HeroInfos;
-import resources.ImagePaths;
-import resources.RoomInfos;
 
 public class GameWorld {
 	private Room currentRoom;
 	private Hero hero;
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
-	private long lastTime = 0;
 
 	// A world needs a hero
 	public GameWorld(Hero hero, Room room) {

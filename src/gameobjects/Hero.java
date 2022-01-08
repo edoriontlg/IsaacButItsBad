@@ -56,25 +56,24 @@ public class Hero {
 
 		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX()
 				- tileHalfSize) {
-			direction = new Vector2();
-			return;
+			direction.setX(0);
 		}
 
 		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
-			direction = new Vector2();
-			return;
+			direction.setX(0);
 		}
 
 		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY()
 				- tileHalfSize) {
-			direction = new Vector2();
-			return;
+			direction.setY(0);
 		}
 
 		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
-			direction = new Vector2();
-			return;
+			direction.setY(0);
 		}
+
+		normalizedDirection = getNormalizedDirection();
+		positionAfterMoving = getPosition().addVector(normalizedDirection); 
 
 		setPosition(positionAfterMoving);
 		direction = new Vector2();
@@ -96,20 +95,20 @@ public class Hero {
 			for (ObjectOnGround obj : objectsToCollide) {
 				if (obj != null
 						&& Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
-					if(getMoney()>=10){
+					if (getMoney() >= 10) {
 						if (obj.getImagePath() == "images/hp_up.png") {
 							this.life = HeroInfos.MAX_UP_LIFE;
 							this.lifeMax = true;
 							objToRemove.add(obj);
-							setMoney(getMoney()-10);
+							setMoney(getMoney() - 10);
+						}
+
+						if (obj.getImagePath() == "images/Blood_of_the_martyr.png") {
+							this.attack += 1;
+							objToRemove.add(obj);
+							setMoney(getMoney() - 10);
+						}
 					}
-					
-					if (obj.getImagePath() == "images/Blood_of_the_martyr.png") {
-						this.attack += 1;
-						objToRemove.add(obj);
-						setMoney(getMoney()-10);
-					}
-				}
 					if (obj.getImagePath() == "images/Red_Heart.png") {
 						if (this.life < HeroInfos.MAX_LIFE - 1 || lifeMax && this.life < HeroInfos.MAX_UP_LIFE - 1) {
 							this.life += 2;
@@ -170,9 +169,9 @@ public class Hero {
 			int maxFullHearts = (maxHealth - maxHealth % 2) / 2;
 
 			for (int i = 0; i < maxFullHearts; i++) {
-				if ((i+1)*2 <= this.life) {
+				if ((i + 1) * 2 <= this.life) {
 					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HEART_HUD);
-				} else if ((i+1)*2 - 1 <= life) {
+				} else if ((i + 1) * 2 - 1 <= life) {
 					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.HALF_HEART_HUD);
 				} else {
 					StdDraw.picture(0.05 * (i + 1), 0.95, ImagePaths.EMPTY_HEART_HUD);
@@ -302,11 +301,12 @@ public class Hero {
 	public int getAttack() {
 		return this.attack;
 	}
-	public void setAttack(int attack){
-		this.attack =attack;
+
+	public void setAttack(int attack) {
+		this.attack = attack;
 	}
 
-	public void setLifeMax(boolean lifeMax){
+	public void setLifeMax(boolean lifeMax) {
 		this.lifeMax = lifeMax;
 	}
 

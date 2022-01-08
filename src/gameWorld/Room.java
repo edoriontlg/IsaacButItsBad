@@ -30,8 +30,6 @@ public class Room {
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
-
-		// Temporary
 	}
 
 	/*
@@ -204,24 +202,23 @@ public class Room {
 				positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
 				RoomInfos.TILE_HEIGHT, 90);
 
+
+		//Draw hero
 		hero.drawGameObject();
-		StdDraw.picture(0.05, 0.9, ImagePaths.COIN);
+		
+
 		if (ObjectPickable != null) {
 			for (ObjectOnGround sol : ObjectPickable) {
 				if (sol != null)
 					sol.drawGameObject();
 			}
 		}
-
 		if (StaticEntities != null) {
 			for (StaticEntity entity : StaticEntities) {
 				if (entity != null)
 					entity.drawGameObject();
 			}
 		}
-		
-		
-
 		if (tears != null) {
 			for (Projectile larme : tears) {
 				if (larme != null)
@@ -234,26 +231,12 @@ public class Room {
 					monstre.drawGameObject();
 			}
 		}
-		if (StaticEntities != null) {
-			for (StaticEntity entity : StaticEntities) {
-				if (entity != null)
-					entity.drawGameObject();
-			}
-		}
 		if (projectiles != null) {
 			for (Projectile proj : projectiles) {
 				if (proj != null)
 					proj.drawGameObject();
 			}
 		}
-
-		//StdDraw.picture(0.5,0.8,"images/Cain.png");
-		//StdDraw.text(0.55,0.6,"10");
-		//StdDraw.picture(0.6, 0.6, ImagePaths.COIN);
-		//StdDraw.text(0.35,0.6,"10");
-		//StdDraw.picture(0.4, 0.6, ImagePaths.COIN);
-
-		
 	}
 
 	
@@ -262,13 +245,7 @@ public class Room {
 
 	public void removeMonster() {
 
-		List<Monstre> monstreToRemove = new ArrayList<Monstre>();
-		for (Monstre monstre : monstres) {
-			monstreToRemove.add(monstre);
-		}
-		for (Monstre monstre : monstreToRemove) {
-			monstres.remove(monstre);
-		}
+		monstres.clear();
 
 	}
 

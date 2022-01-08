@@ -11,8 +11,8 @@ public class SpiderBehavior extends Monstre {
 
     private long lastTime = 0;
 
-    public SpiderBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
-        super(position, size, speed, imagePath, life, type);
+    public SpiderBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life) {
+        super(position, size, speed, imagePath, life, MONSTER_TYPE.SPIDER);
     }
 
     public void move(List<StaticEntity> entity, Hero hero) {
@@ -22,13 +22,16 @@ public class SpiderBehavior extends Monstre {
             Vector2 directionSpider = new Vector2();
 
             // We choose with random the direction of the spider
-            directionSpider.setX(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-            directionSpider.setY(Math.floor(Math.random() * (1.0 - (-1.0) + 1) + (-1.0)));
-            directionSpider.euclidianNorm();
-            this.getDirection().setX(directionSpider.getX());
-            this.getDirection().setY(directionSpider.getY());
+            directionSpider.setX(Math.random() * 2 - 1);
+            directionSpider.setY(Math.random() * 2 - 1);
+            directionSpider.euclidianNormalize(1.0);
+
+            direction = directionSpider;
+
             lastTime = System.currentTimeMillis();
         }
+
+        setPosition(position.addVector(direction.scalarMultiplication(speed)));
     }
 
     public void attack(List<Projectile> projectiles, Hero hero) {

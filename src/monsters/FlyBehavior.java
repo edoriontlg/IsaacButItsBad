@@ -13,8 +13,8 @@ public class FlyBehavior extends Monstre {
 
     public static long projectileLifetime = 0;
 
-    public FlyBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
-        super(position, size, speed, imagePath, life, type);
+    public FlyBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life) {
+        super(position, size, speed, imagePath, life, MONSTER_TYPE.FLY);
     }
 
     public void move(List<StaticEntity> entities, Hero hero) {

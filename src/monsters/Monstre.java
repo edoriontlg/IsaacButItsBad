@@ -4,11 +4,9 @@ import libraries.StdDraw;
 
 import java.util.List;
 
-import gameobjects.Hero;
-import gameobjects.Projectile;
-import gameobjects.StaticEntity;
-import libraries.Vector2;
-import resources.DisplaySettings;
+import gameobjects.*;
+import libraries.*;
+import resources.*;
 
 public abstract class Monstre {
 	protected Vector2 position;
@@ -17,9 +15,9 @@ public abstract class Monstre {
 	protected double speed;
 	Vector2 direction;
 	private int life;
-	protected String type;
+	protected MONSTER_TYPE type;
 
-	public Monstre(Vector2 position, Vector2 size, double speed, String imagePath, int life, String type) {
+	public Monstre(Vector2 position, Vector2 size, double speed, String imagePath, int life, MONSTER_TYPE type) {
 		this.position = position;
 		this.size = size;
 		this.speed = speed;
@@ -107,7 +105,28 @@ public abstract class Monstre {
 		this.life = life;
 	}
 
-	public String getType() {
+	public MONSTER_TYPE getType() {
 		return this.type;
+	}
+
+	public static Monstre CreateMonster(Vector2 position, MONSTER_TYPE type) {
+		switch (type) {
+			case GAPER:
+				return new GaperBehavior(position, MonstersInfo.GAPER_SIZE, MonstersInfo.GAPER_SPEED, ImagePaths.GAPER, MonstersInfo.GAPER_LIFE);	
+			case FLY:
+				return new FlyBehavior(position, MonstersInfo.FLY_SIZE, MonstersInfo.FLY_SPEED, ImagePaths.FLY, MonstersInfo.FLY_LIFE);	
+			case SPIDER:
+			return new SpiderBehavior(position, MonstersInfo.SPIDER_SIZE, MonstersInfo.SPIDER_SPEED, ImagePaths.SPIDER, MonstersInfo.SPIDER_LIFE);
+			default:
+				break;
+		}
+
+		return null;
+	}
+
+	public enum MONSTER_TYPE {
+		GAPER,
+		FLY,
+		SPIDER
 	}
 }
