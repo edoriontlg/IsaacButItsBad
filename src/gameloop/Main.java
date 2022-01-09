@@ -20,7 +20,6 @@ public class Main
 	public static long updateTime;
 	public static long renderTime;
 	public static long physicsTime;
-	public static Room[] rooms;
 	public static GameWorld world;
 
 	public static void main(String[] args)
@@ -28,13 +27,17 @@ public class Main
 		// Hero, world and display initialisation.
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0,1);
 
-		rooms = new Room[3];
 
-		rooms[0] = new StartRoom(isaac);
-		rooms[1] = new Room(isaac);
-		rooms[2] = new TestRoom(isaac);
+		Room rooms1 = new StartRoom(isaac);
+		Room rooms2 = new Room(isaac);
+		Room rooms3 = new TestRoom(isaac);
 
-		world = new GameWorld(isaac, rooms[2]);				
+		rooms3.topRoom = rooms2;
+		rooms3.bottomRoom = rooms2;
+		rooms3.rightRoom = rooms2;
+		rooms3.lefRoom = rooms2;
+
+		world = new GameWorld(isaac, rooms3);				
 		initializeDisplay();
 		
 		// Main loop of the game
@@ -52,26 +55,15 @@ public class Main
 		long tmp = System.nanoTime();
 		world.updateGameObjects();
 		updateTime = System.nanoTime() - tmp;
-		world.processPhysics();
-		physicsTime = System.nanoTime() - (tmp + updateTime);
 		world.drawGameObjects();
-		renderTime = System.nanoTime() - (tmp + updateTime + physicsTime);
+		renderTime = System.nanoTime() - (tmp + updateTime);
 
 		if (DisplaySettings.DRAW_DEBUG_INFO) {
 			StdDraw.setPenColor(StdDraw.GREEN);
 			StdDraw.text(0.1, 0.05, "UT :" + Math.round(updateTime / 10000d) / 100d);
-			StdDraw.text(0.1, 0.08, "PT :" + Math.round(physicsTime / 10000d) / 100d);
-			StdDraw.text(0.1, 0.11, "RT :" + Math.round(renderTime / 10000d) / 100d);
+			StdDraw.text(0.1, 0.08, "RT :" + Math.round(renderTime / 10000d) / 100d);
 		}
 		
-
-		//if (StdDraw.isKeyPressed() {
-		//	world.UpdateRoom(rooms[0]);
-		//} else if (StdDraw.isKeyPressed()) { 
-		//	world.UpdateRoom(rooms[1]);
-		//} else if (StdDraw.isKeyPressed()) { 
-		//	world.UpdateRoom(rooms[2]);
-		//}
 
 		StdDraw.show();
 		Timer.waitToMaintainConstantFPS();

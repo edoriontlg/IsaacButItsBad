@@ -35,10 +35,6 @@ public class GameWorld {
 
 	}
 
-	public void processPhysics() {
-		currentRoom.processPhysics();
-	}
-
 	public void drawGameObjects() {
 		currentRoom.drawRoom();
 	}

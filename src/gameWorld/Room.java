@@ -14,6 +14,9 @@ public class Room {
 	private Image BACKGROUND_TILE;
 	private Image WALL;
 	private Image CORNER;
+	private Image DOOR_OPEN;
+	private Image DOOR_CLOSED;
+	private int cheatDmg = 0;
 
 	// We make it protected so other rooms can use it, but not other classes.
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
@@ -23,7 +26,12 @@ public class Room {
 	public List<Projectile> tears = new ArrayList<Projectile>();
 	public List<Projectile> projectiles = new ArrayList<Projectile>();
 	public List<Monstre> monstres = new ArrayList<Monstre>();
-	private int cheatDmg = 0;
+
+	private List<Projectile> tearsToRemove = new ArrayList<Projectile>();
+	private List<Projectile> projToRemove = new ArrayList<Projectile>();
+	private List<Monstre> monstresToRemove = new ArrayList<Monstre>();
+
+	public boolean roomFinished = false;
 
 	// Other rooms
 	public Room topRoom;
@@ -36,6 +44,8 @@ public class Room {
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
+		this.DOOR_CLOSED = StdDraw.getImage(ImagePaths.CLOSED_DOOR);
+		this.DOOR_OPEN = StdDraw.getImage(ImagePaths.OPENED_DOOR);
 	}
 
 	public Room(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom) {
@@ -54,125 +64,105 @@ public class Room {
 	 * Make every entity that compose a room process one step
 	 */
 	public void updateRoom() {
+		// Update hero (movement and attack)
 		hero.updateGameObject(StaticEntities);
+
+		// Update monster (movement and attack)
 		for (Monstre monstre : monstres) {
 			monstre.updateGameObject(StaticEntities, hero, projectiles);
 		}
 
 		// We update the projectile positions
-		if (projectiles != null) {
-			for (Projectile proj : projectiles) {
-				if (proj != null)
-					proj.updateGameObject();
-			}
+		for (Projectile proj : projectiles) {
+			if (proj != null)
+				proj.updateGameObject();
 		}
 
 		// Same for the tears
-		if (tears != null) {
-			for (Projectile larme : tears) {
-				if (larme != null)
-					larme.updateGameObject();
-			}
+		for (Projectile larme : tears) {
+			if (larme != null)
+				larme.updateGameObject();
 		}
 
-	}
-
-	public void processPhysics() {
 		// First we check if the hero is picking any object
 		hero.processPhysics(ObjectPickable);
 
-		// Check if anything else is colliding
+		// Check if anything else is colliding (IE Tears with monsters, projs with
+		// heroes)
 		processPhysicsTears();
 		processPhysicsProjs();
-		processPhysicsMonstre();
-	}
 
-	public void processPhysicsTears() {
-		if (tears != null) {
-			// We store the tear we will need to delete
-			List<Projectile> tearToRemove = new ArrayList<Projectile>();
+		// We clear all entities that needs to be deleted
+		clearDeadEntities();
 
-			// For each, if collision we do something then delete it
-			for (Projectile larme : tears) {
-				if (larme.getPosition().getX() > 0.9 || larme.getPosition().getX() < 0.1
-						|| larme.getPosition().getY() > 0.9 || larme.getPosition().getY() < 0.1) {
-					tearToRemove.add(larme);
-				}
-			}
+		if (!roomFinished && monstres.isEmpty()) {
+			roomFinished = true;
+		} else {
 
-			// We ACTUALLY remove it (not inside the first loop, it messes up everything)
-			for (Projectile larme : tearToRemove) {
-				tears.remove(larme);
-			}
 		}
-
 	}
 
-	public void processPhysicsProjs() {
-		if (projectiles != null) {
-			// We store the tear we will need to delete
-			List<Projectile> projToRemove = new ArrayList<Projectile>();
-
-			// We check if the projectile collide with the player or is offscreen
-			for (Projectile proj : projectiles) {
-				if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
-						hero.getSize())) {
-					hero.setLife(hero.getLife() - 1);
-					projToRemove.add(proj);
-				} else if (proj.getPosition().getX() > 0.9 || proj.getPosition().getX() < 0.1
-						|| proj.getPosition().getY() > 0.9 || proj.getPosition().getY() < 0.1) {
-					projToRemove.add(proj);
-				}
+	private void processPhysicsTears() {
+		// For each tear if it's outside the map delete it
+		for (Projectile larme : tears) {
+			if (larme.getPosition().getX() > 0.9 || larme.getPosition().getX() < 0.1
+					|| larme.getPosition().getY() > 0.9 || larme.getPosition().getY() < 0.1) {
+				tearsToRemove.add(larme);
 			}
 
-			// We ACTUALLY remove it (not inside the first loop, it messes up everything)
-			for (Projectile proj : projToRemove) {
-				projectiles.remove(proj);
-			}
-		}
+			for (Monstre monstre : monstres) {
+				// We check if the tear collide with a monster
+				if (Physics.rectangleCollision(larme.getPosition(), larme.getSize(), monstre.getPosition(),
+						monstre.getSize())) {
 
-	}
-
-	public void processPhysicsMonstre() {
-		if (monstres != null) {
-			// We store the object we will need to delete
-			List<Monstre> monstreToRemove = new ArrayList<Monstre>();
-			List<Projectile> tearToRemove = new ArrayList<Projectile>();
-
-			if (tears != null) {
-				for (Monstre monstre : monstres) {
-					for (Projectile larme : tears) {
-
-						// We check if the tear collide with a monster
-						if (Physics.rectangleCollision(larme.getPosition(), larme.getSize(), monstre.getPosition(),
-								monstre.getSize())) {
-
-							// We take out 1 life point to the monster and check if he has 0 life point to
-							// remove it
-							monstre.setLife(monstre.getLife() - hero.getAttack() - cheatDmg);
-							if (monstre.getLife() <= 0) {
-								monstreToRemove.add(monstre);
-							}
-							tearToRemove.add(larme);
-						}
+					// We take out 1 life point to the monster and check if he has 0 life point to
+					// remove it
+					monstre.setLife(monstre.getLife() - hero.getAttack() - cheatDmg);
+					if (monstre.getLife() <= 0) {
+						monstresToRemove.add(monstre);
 					}
+					tearsToRemove.add(larme);
 				}
 			}
+		}
+	}
 
-			for (Monstre monstre : monstreToRemove) {
-				monstres.remove(monstre);
+	private void processPhysicsProjs() {
+		// We check if the projectile collide with the player or is offscreen
+		for (Projectile proj : projectiles) {
+			if (Physics.rectangleCollision(proj.getPosition(), proj.getSize(), hero.getPosition(),
+					hero.getSize())) {
+				hero.setLife(hero.getLife() - 1);
+				projToRemove.add(proj);
+			} else if (proj.getPosition().getX() > 0.9 || proj.getPosition().getX() < 0.1
+					|| proj.getPosition().getY() > 0.9 || proj.getPosition().getY() < 0.1) {
+				projToRemove.add(proj);
 			}
-			for (Projectile larme : tearToRemove) {
-				tears.remove(larme);
-			}
+		}
+	}
+
+	private void clearDeadEntities() {
+		for (Projectile proj : tearsToRemove) {
+			tears.remove(proj);
+		}
+
+		for (Projectile proj : projToRemove) {
+			projectiles.remove(proj);
+		}
+
+		for (Monstre proj : monstresToRemove) {
+			monstres.remove(proj);
 		}
 	}
 
 	/*
 	 * Drawing
+	 * 
+	 * 
+	 * 
 	 */
 	public void drawRoom() {
-		// For every CENTER TILE draw them
+		// For every CENTER TILE
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++) {
 			for (int j = 1; j < RoomInfos.NB_TILES - 1; j++) {
 				Vector2 position = positionFromTileIndex(i, j);
@@ -212,41 +202,85 @@ public class Room {
 				positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
 				RoomInfos.TILE_HEIGHT, 90);
 
+		// Draw doors
+
+		if (topRoom != null) {
+			if (roomFinished)
+				StdDraw.pictureIMG(
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(),
+						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
+			else
+				StdDraw.pictureIMG(
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(),
+						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
+		}
+
+		if (bottomRoom != null) {
+			if (roomFinished)
+				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(),
+						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
+			else
+				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(),
+						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
+		}
+
+		if (lefRoom != null) {
+			if (roomFinished)
+				StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
+						positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
+			else
+				StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
+						positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
+		}
+
+		if (rightRoom != null) {
+			if (roomFinished)
+				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
+			else
+				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
+						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
+		}
+
 		// Draw hero
 		hero.drawGameObject();
 
-		if (ObjectPickable != null) {
-			for (ObjectOnGround sol : ObjectPickable) {
-				if (sol != null)
-					sol.drawGameObject();
-			}
+		for (ObjectOnGround obj : ObjectPickable) {
+			if (obj != null)
+				obj.drawGameObject();
 		}
-		if (StaticEntities != null) {
-			for (StaticEntity entity : StaticEntities) {
-				if (entity != null)
-					entity.drawGameObject();
-			}
+		for (StaticEntity entity : StaticEntities) {
+			if (entity != null)
+				entity.drawGameObject();
 		}
-		if (tears != null) {
-			for (Projectile larme : tears) {
-				if (larme != null)
-					larme.drawGameObject();
-			}
+		for (Projectile larme : tears) {
+			if (larme != null)
+				larme.drawGameObject();
 		}
-		if (monstres != null) {
-			for (Monstre monstre : monstres) {
-				if (monstre != null)
-					monstre.drawGameObject();
-			}
+		for (Monstre monstre : monstres) {
+			if (monstre != null)
+				monstre.drawGameObject();
 		}
-		if (projectiles != null) {
-			for (Projectile proj : projectiles) {
-				if (proj != null)
-					proj.drawGameObject();
-			}
+		for (Projectile proj : projectiles) {
+			if (proj != null)
+				proj.drawGameObject();
 		}
 	}
 
+	/*
+	 * Helpers
+	 * 
+	 * 
+	 * 
+	 */
 	public void removeMonster() {
 
 		monstres.clear();
