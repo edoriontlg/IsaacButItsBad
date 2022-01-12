@@ -328,6 +328,7 @@ public class Room {
 	public void removeMonster() {
 
 		monstres.clear();
+		projectiles.clear();
 
 	}
 

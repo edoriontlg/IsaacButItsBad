@@ -15,6 +15,6 @@ public class MonstersInfo
 
     public static final int GAPER_LIFE = 20;
     public static final Vector2 GAPER_SIZE = RoomInfos.TILE_SIZE.scalarMultiplication(1.0);
-    public static final double GAPER_PROJ_SPEED = 0.05;
-    public static final double GAPER_SPEED = 0.002;
+    public static final double GAPER_PROJ_SPEED = 0.08;
+    public static final double GAPER_SPEED = 0.005;
 }

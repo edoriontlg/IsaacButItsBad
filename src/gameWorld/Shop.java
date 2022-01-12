@@ -22,11 +22,11 @@ public class Shop extends Room{
     }
 
     public static void drawShop(){
-        StdDraw.picture(0.3, 0.5, ImagePaths.COIN);
-        StdDraw.picture(0.6, 0.5, ImagePaths.COIN);
-        StdDraw.picture(0.5, 0.8, "Cain.png", 0.2, 0.2, 0);
-        StdDraw.text(0.2, 0.5, "10");
-        StdDraw.text(0.5, 0.5, "10");
+        StdDraw.picture(0.3, 0.55, ImagePaths.COIN);
+        StdDraw.picture(0.6, 0.55, ImagePaths.COIN);
+        StdDraw.picture(0.45, 0.7, "Cain.png", 0.1, 0.1, 0);
+        StdDraw.text(0.25, 0.55, "10");
+        StdDraw.text(0.55, 0.55, "10");
     }
     
 

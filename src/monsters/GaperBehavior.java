@@ -18,6 +18,7 @@ public class GaperBehavior extends Monstre {
     }
 
     public void move(List<StaticEntity> entity, Hero hero) {
+    if(getPosition().getX()<0.9 && getPosition().getX()>0.1 && getPosition().getY()<0.9 && getPosition().getY()>0.1){}
         if (System.currentTimeMillis() - lastTimeMove > 750 || System.currentTimeMillis() - lastTimeMove < 0) {
             Vector2 directionGaper = new Vector2();
 
@@ -33,6 +34,7 @@ public class GaperBehavior extends Monstre {
 
         setPosition(position.addVector(direction.scalarMultiplication(speed)));
     }
+    
 
     public void attack(List<Projectile> projectiles, Hero hero) {
 
