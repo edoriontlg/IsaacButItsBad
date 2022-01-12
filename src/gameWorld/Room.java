@@ -51,14 +51,16 @@ public class Room {
 	private Vector2 rightRoomPos = new Vector2(
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
+			private String type;
 
-	public Room(Hero hero) {
+	public Room(Hero hero, String type) {
 		this.hero = hero;
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
 		this.DOOR_CLOSED = StdDraw.getImage(ImagePaths.CLOSED_DOOR);
 		this.DOOR_OPEN = StdDraw.getImage(ImagePaths.OPENED_DOOR);
+		this.type =type;
 	}
 
 	public Room(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom) {
@@ -80,6 +82,7 @@ public class Room {
 		// Update hero (movement and attack)
 		hero.updateGameObject(StaticEntities);
 
+		
 		if (roomFinished) {
 			if (topRoom != null && Physics.rectangleCollision(topRoomPos,
 					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
@@ -99,6 +102,7 @@ public class Room {
 					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
 					hero.getPosition(),
 					hero.getSize())) {
+					 
 
 				hero.getPosition().setY(0.85);
 				GameWorld.UpdateRoom(bottomRoom);
@@ -308,6 +312,11 @@ public class Room {
 			if (proj != null)
 				proj.drawGameObject();
 		}
+
+
+		if(this.type == "shop"){
+			Shop.drawShop();
+		}
 	}
 
 	/*
@@ -331,7 +340,7 @@ public class Room {
 	}
 
 	public static Room createDungeon(Room[] rooms, Hero hero) {
-		Room result = new StartRoom(hero);
+		Room result = new StartRoom(hero, "start");
 
 		Room currentRoomToEdit = result;
 

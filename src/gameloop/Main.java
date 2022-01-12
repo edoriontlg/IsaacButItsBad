@@ -3,6 +3,7 @@ package gameloop;
 
 import gameWorld.GameWorld;
 import gameWorld.Room;
+import gameWorld.Shop;
 import gameWorld.StartRoom;
 import gameWorld.TestRoom;
 import gameobjects.Hero;
@@ -28,10 +29,10 @@ public class Main
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0,1);
 
 
-		Room rooms1 = new TestRoom(isaac);
-		Room rooms2 = new TestRoom(isaac);
-		Room rooms3 = new TestRoom(isaac);
-		Room rooms4 = new TestRoom(isaac);
+		Room rooms1 = new TestRoom(isaac, "monstre");
+		Room rooms2 = new TestRoom(isaac, "monstre");
+		Room rooms3 = new TestRoom(isaac, "monstre");
+		Room rooms4 = new Shop(isaac, "shop");
 
 		Room[] rooms = {rooms1, rooms2, rooms3, rooms4};
 

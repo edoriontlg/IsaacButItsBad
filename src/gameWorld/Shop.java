@@ -3,14 +3,34 @@ package gameWorld;
 import java.util.List;
 import gameWorld.*;
 import gameobjects.*;
+import libraries.StdDraw;
+import libraries.Vector2;
+import resources.*;
 
 
 public class Shop extends Room{
    
 
-    public Shop(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom){
-        super(hero, topRoom, bottomRoom, leftRoom, rightRoom);
+    public Shop(Hero hero, String type){
+        super(hero, type);
+
+
+        ObjectPickable.add(new ObjectOnGround(new Vector2(0.3,0.6), RoomInfos.HALF_TILE_SIZE, "images/Blood_of_the_martyr.png"));
+        ObjectPickable.add(new ObjectOnGround(new Vector2(0.6,0.6), RoomInfos.HALF_TILE_SIZE, "images/hp_up.png"));
+        
+        
     }
+
+    public static void drawShop(){
+        StdDraw.picture(0.3, 0.5, ImagePaths.COIN);
+        StdDraw.picture(0.6, 0.5, ImagePaths.COIN);
+        StdDraw.picture(0.5, 0.8, "Cain.png", 0.2, 0.2, 0);
+        StdDraw.text(0.2, 0.5, "10");
+        StdDraw.text(0.5, 0.5, "10");
+    }
+    
+
+
 
     
 }
