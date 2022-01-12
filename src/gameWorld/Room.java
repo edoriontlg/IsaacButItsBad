@@ -2,6 +2,7 @@ package gameWorld;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.awt.*;
 
 import gameobjects.*;
@@ -35,9 +36,21 @@ public class Room {
 
 	// Other rooms
 	public Room topRoom;
+	private Vector2 topRoomPos = new Vector2(
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY());
 	public Room bottomRoom;
+	private Vector2 bottomRoomPos = new Vector2(
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY());
 	public Room lefRoom;
+	private Vector2 leftRoomPos = new Vector2(
+			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
+			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2);
 	public Room rightRoom;
+	private Vector2 rightRoomPos = new Vector2(
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
+			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
 
 	public Room(Hero hero) {
 		this.hero = hero;
@@ -66,6 +79,38 @@ public class Room {
 	public void updateRoom() {
 		// Update hero (movement and attack)
 		hero.updateGameObject(StaticEntities);
+
+		if (roomFinished) {
+			if (topRoom != null && Physics.rectangleCollision(topRoomPos,
+					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
+					hero.getPosition(),
+					hero.getSize())) {
+
+				hero.getPosition().setY(0.15);
+				GameWorld.UpdateRoom(topRoom);
+			} else if (rightRoom != null && Physics.rectangleCollision(rightRoomPos,
+					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
+					hero.getPosition(),
+					hero.getSize())) {
+
+				hero.getPosition().setX(0.15);
+				GameWorld.UpdateRoom(rightRoom);
+			} else if (bottomRoom != null && Physics.rectangleCollision(bottomRoomPos,
+					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
+					hero.getPosition(),
+					hero.getSize())) {
+
+				hero.getPosition().setY(0.85);
+				GameWorld.UpdateRoom(bottomRoom);
+			} else if (lefRoom != null && Physics.rectangleCollision(leftRoomPos,
+					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
+					hero.getPosition(),
+					hero.getSize())) {
+
+				hero.getPosition().setX(0.85);
+				GameWorld.UpdateRoom(lefRoom);
+			}
+		}
 
 		// Update monster (movement and attack)
 		for (Monstre monstre : monstres) {
@@ -206,47 +251,37 @@ public class Room {
 
 		if (topRoom != null) {
 			if (roomFinished)
-				StdDraw.pictureIMG(
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(),
+				StdDraw.pictureIMG(topRoomPos.getX(), topRoomPos.getY(),
 						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
 			else
-				StdDraw.pictureIMG(
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(),
+				StdDraw.pictureIMG(topRoomPos.getX(), topRoomPos.getY(),
 						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
 		}
 
 		if (bottomRoom != null) {
 			if (roomFinished)
-				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(),
+				StdDraw.pictureIMG(bottomRoomPos.getX(), bottomRoomPos.getY(),
 						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
 			else
-				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(),
+				StdDraw.pictureIMG(bottomRoomPos.getX(), bottomRoomPos.getY(),
 						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
 		}
 
 		if (lefRoom != null) {
 			if (roomFinished)
-				StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
-						positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+				StdDraw.pictureIMG(leftRoomPos.getX(), leftRoomPos.getY(),
 						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
 			else
-				StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
-						positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+				StdDraw.pictureIMG(leftRoomPos.getX(), leftRoomPos.getY(),
 						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
 		}
 
 		if (rightRoom != null) {
 			if (roomFinished)
-				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+				StdDraw.pictureIMG(rightRoomPos.getX(), rightRoomPos.getY(),
 						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
 			else
-				StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
-						positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2,
+				StdDraw.pictureIMG(rightRoomPos.getX(), rightRoomPos.getY(),
 						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 270);
 		}
 
@@ -293,6 +328,63 @@ public class Room {
 		} else {
 			cheatDmg = 0;
 		}
+	}
+
+	public static Room createDungeon(Room[] rooms, Hero hero) {
+		Room result = new StartRoom(hero);
+
+		Room currentRoomToEdit = result;
+
+		for (int i = 0; i < rooms.length; i++) {
+			int choice = new Random().nextInt(2);
+			int roomPos = new Random().nextInt(4);
+
+			switch (choice) {
+				case 0:
+					switch (roomPos) {
+						case 0:
+							currentRoomToEdit.topRoom = rooms[i];
+							rooms[i].bottomRoom = currentRoomToEdit;
+							break;
+						case 1:
+							currentRoomToEdit.rightRoom = rooms[i];
+							rooms[i].lefRoom = currentRoomToEdit;
+							break;
+						case 2:
+							currentRoomToEdit.bottomRoom = rooms[i];
+							rooms[i].topRoom = currentRoomToEdit;
+							break;
+						default:
+							currentRoomToEdit.lefRoom = rooms[i];
+							rooms[i].rightRoom = currentRoomToEdit;
+							break;
+					}
+					continue;
+				default:
+					switch (roomPos) {
+						case 0:
+							currentRoomToEdit.topRoom = rooms[i];
+							rooms[i].bottomRoom = currentRoomToEdit;
+							break;
+						case 1:
+							currentRoomToEdit.rightRoom = rooms[i];
+							rooms[i].lefRoom = currentRoomToEdit;
+							break;
+						case 2:
+							currentRoomToEdit.bottomRoom = rooms[i];
+							rooms[i].topRoom = currentRoomToEdit;
+							break;
+						default:
+							currentRoomToEdit.lefRoom = rooms[i];
+							rooms[i].rightRoom = currentRoomToEdit;
+							break;
+					}
+					currentRoomToEdit = rooms[i];
+					continue;
+			}
+		}
+
+		return result;
 	}
 
 	/**

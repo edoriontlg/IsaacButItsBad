@@ -8,7 +8,7 @@ import libraries.StdDraw;
 import resources.Controls;
 
 public class GameWorld {
-	private Room currentRoom;
+	private static Room currentRoom;
 	private Hero hero;
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
 
@@ -88,7 +88,7 @@ public class GameWorld {
 	
 
 
-	public void UpdateRoom(Room newRoom) {
+	public static void UpdateRoom(Room newRoom) {
 		currentRoom = newRoom;
 	}
 }

@@ -28,16 +28,16 @@ public class Main
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED, ImagePaths.ISAAC, 6,0,1);
 
 
-		Room rooms1 = new StartRoom(isaac);
-		Room rooms2 = new Room(isaac);
+		Room rooms1 = new TestRoom(isaac);
+		Room rooms2 = new TestRoom(isaac);
 		Room rooms3 = new TestRoom(isaac);
+		Room rooms4 = new TestRoom(isaac);
 
-		rooms3.topRoom = rooms2;
-		rooms3.bottomRoom = rooms2;
-		rooms3.rightRoom = rooms2;
-		rooms3.lefRoom = rooms2;
+		Room[] rooms = {rooms1, rooms2, rooms3, rooms4};
 
-		world = new GameWorld(isaac, rooms3);				
+		Room dungeon = Room.createDungeon(rooms, isaac);
+
+		world = new GameWorld(isaac, dungeon);				
 		initializeDisplay();
 		
 		// Main loop of the game
