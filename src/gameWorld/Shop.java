@@ -10,7 +10,7 @@ import resources.*;
 
 public class Shop extends Room{
    
-
+    //Initialise un magasin
     public Shop(Hero hero, String type){
         super(hero, type);
 

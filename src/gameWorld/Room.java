@@ -8,6 +8,7 @@ import java.awt.*;
 import gameobjects.*;
 import libraries.*;
 import monsters.Monstre;
+import monsters.Monstre.MONSTER_TYPE;
 import resources.*;
 
 public class Room {
@@ -51,7 +52,7 @@ public class Room {
 	private Vector2 rightRoomPos = new Vector2(
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
-			private String type;
+	private String type;
 
 	public Room(Hero hero, String type) {
 		this.hero = hero;
@@ -60,7 +61,7 @@ public class Room {
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
 		this.DOOR_CLOSED = StdDraw.getImage(ImagePaths.CLOSED_DOOR);
 		this.DOOR_OPEN = StdDraw.getImage(ImagePaths.OPENED_DOOR);
-		this.type =type;
+		this.type = type;
 	}
 
 	public Room(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom) {
@@ -82,7 +83,6 @@ public class Room {
 		// Update hero (movement and attack)
 		hero.updateGameObject(StaticEntities);
 
-		
 		if (roomFinished) {
 			if (topRoom != null && Physics.rectangleCollision(topRoomPos,
 					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
@@ -102,7 +102,6 @@ public class Room {
 					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
 					hero.getPosition(),
 					hero.getSize())) {
-					 
 
 				hero.getPosition().setY(0.85);
 				GameWorld.UpdateRoom(bottomRoom);
@@ -114,6 +113,7 @@ public class Room {
 				hero.getPosition().setX(0.85);
 				GameWorld.UpdateRoom(lefRoom);
 			}
+
 		}
 
 		// Update monster (movement and attack)
@@ -146,11 +146,19 @@ public class Room {
 
 		if (!roomFinished && monstres.isEmpty()) {
 			roomFinished = true;
-		} else {
+			if (this.type == "monstre") {
+				ObjectPickable
+						.add(new ObjectOnGround(new Vector2(0.4, 0.4), RoomInfos.HALF_TILE_SIZE, "images/Penny.png"));
+				ObjectPickable
+						.add(new ObjectOnGround(new Vector2(0.6, 0.4), RoomInfos.HALF_TILE_SIZE, "images/Nickel.png"));
+				ObjectPickable
+						.add(new ObjectOnGround(new Vector2(0.5, 0.5), RoomInfos.HALF_TILE_SIZE, "images/Dime.png"));
 
+			}
 		}
 	}
 
+	// Gère la collision des larmes
 	private void processPhysicsTears() {
 		// For each tear if it's outside the map delete it
 		for (Projectile larme : tears) {
@@ -176,6 +184,7 @@ public class Room {
 		}
 	}
 
+	// Gère la collision des projectiles
 	private void processPhysicsProjs() {
 		// We check if the projectile collide with the player or is offscreen
 		for (Projectile proj : projectiles) {
@@ -190,6 +199,7 @@ public class Room {
 		}
 	}
 
+	// Enlève les objets quand ils meurent
 	private void clearDeadEntities() {
 		for (Projectile proj : tearsToRemove) {
 			tears.remove(proj);
@@ -313,8 +323,7 @@ public class Room {
 				proj.drawGameObject();
 		}
 
-
-		if(this.type == "shop"){
+		if (this.type == "shop") {
 			Shop.drawShop();
 		}
 	}
@@ -340,6 +349,7 @@ public class Room {
 		}
 	}
 
+	// Création d'un donjon avec des salles aléatoires
 	public static Room createDungeon(Room[] rooms, Hero hero) {
 		Room result = new StartRoom(hero, "start");
 
@@ -395,6 +405,15 @@ public class Room {
 		}
 
 		return result;
+	}
+
+	public boolean win(){
+		for(Monstre monstre : monstres){
+			if(monstre.getType() == MONSTER_TYPE.GAPER){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

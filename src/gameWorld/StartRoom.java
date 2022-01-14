@@ -1,10 +1,12 @@
 package gameWorld;
 
+
 import gameobjects.*;
 import resources.*;
 
 public class StartRoom extends Room {
 
+	//Initialise la salle de départ
 	public StartRoom(Hero hero,String type) {
 		super(hero, type);
 

@@ -24,12 +24,14 @@ public class Projectile {
 		move();
 	}
 
+    //Fait bouger le projectile en normalisant le vecteur et en le multipliant par sa vitesse
 	private void move() {
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 newPosition = getPosition().addVector(normalizedDirection.scalarMultiplication(speed));
 		setPosition(newPosition);
 	}
 
+    //Dessine le projectile
     public void drawGameObject() {
         StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
                 0);

@@ -9,6 +9,7 @@ public class StaticEntity {
 	public Vector2 position;
 	public Vector2 size;
 	
+	//Dessine les obstacles
 	public void drawGameObject() {
 		StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
 				0);

@@ -15,6 +15,7 @@ public class Equipments {
         this.position = position;
     }
 
+    //Retourne le type d'équipement 
     public String getType(){
         return this.type;
     }

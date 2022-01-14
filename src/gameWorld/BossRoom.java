@@ -10,6 +10,8 @@ import resources.*;
 
 public class BossRoom extends Room {
 
+
+    //Initialise la salle de boss avec un Gaper
     public BossRoom(Hero hero, String type) {
         super(hero, type);
 

@@ -15,6 +15,7 @@ public class ObjectOnGround {
         this.imagePath = imagePath;
     }
 
+    //Dessine les objets récupérables au sol
     public void drawGameObject() {
         StdDraw.picture(getPosition().getX(), getPosition().getY(), getImagePath(), getSize().getX(), getSize().getY(),
                 0);

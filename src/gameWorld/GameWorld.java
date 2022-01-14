@@ -18,6 +18,7 @@ public class GameWorld {
 
 		currentRoom = room;
 	}
+	
 
 	public void processUserInput() {
 		processKeysForMovement();
@@ -26,9 +27,14 @@ public class GameWorld {
 	}
 
 	public boolean gameOver() {
-		
-		return false;
+		if (hero.getLife() == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
+
+	
 
 	public void updateGameObjects() {
 		currentRoom.updateRoom();
@@ -58,7 +64,10 @@ public class GameWorld {
 		}
 	}
 
+	// Touches pour tricher dans le jeu
 	private void processKeysForCheating() {
+
+		// permet de devenir invincible
 		if (StdDraw.isKeyPressed(Controls.invincible)) {
 			if (hero.getLife() != 1006) {
 				hero.setLife(hero.getLife() + 1000);
@@ -66,6 +75,8 @@ public class GameWorld {
 				hero.setLife(6);
 			}
 		}
+
+		// Permet d'aller beaucoup plus vite
 		if (StdDraw.isKeyPressed(Controls.speed)) {
 			if (hero.getSpeed() != 0.04) {
 				hero.setSpeed(hero.getSpeed() + 0.03);
@@ -73,20 +84,23 @@ public class GameWorld {
 				hero.setSpeed(0.01);
 			}
 		}
+
+		// Permet de tuer tout les monstres
 		if (StdDraw.isKeyPressed(Controls.kill)) {
 			currentRoom.removeMonster();
 		}
+
+		// Permet d'avoir des pièces à l'infini
 		if (StdDraw.isKeyPressed(Controls.piece)) {
 			hero.setMoney(hero.getMoney() + 10);
 		}
+
+		// Augmente les dommages d'Isaac
 		if (StdDraw.isKeyPressed(Controls.dmg)) {
 			currentRoom.instantKill();
 		}
 
 	}
-
-	
-
 
 	public static void UpdateRoom(Room newRoom) {
 		currentRoom = newRoom;

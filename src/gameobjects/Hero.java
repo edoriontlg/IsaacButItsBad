@@ -41,6 +41,7 @@ public class Hero {
 		move(entities);
 	}
 
+	//Fait bouger notre héro dans le sens du vecteur et l'empèche de sortir de la salle
 	private void move(List<StaticEntity> entities) {
 		Vector2 normalizedDirection = getNormalizedDirection();
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
@@ -51,6 +52,8 @@ public class Hero {
 			}
 		}
 
+
+		//Pour chaque côté de la salle, empèche le héro d'avancer
 		double halfSize = size.getX() / 2;
 		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
 
@@ -187,6 +190,7 @@ public class Hero {
 		}
 	}
 
+	//Permet au héro de tirer à chaque fois que l'on appuie sur les touches directionnelles avec un délai entre chaque larme
 	public void processKeysForShooting(Room currentRoom) {
 		if (System.currentTimeMillis() - lastTime > 250 || System.currentTimeMillis() - lastTime < 0) {
 			if (StdDraw.isKeyPressed(Controls.shootUp)) {

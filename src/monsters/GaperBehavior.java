@@ -1,5 +1,6 @@
 package monsters;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.List;
 
 import gameobjects.Hero;
@@ -18,23 +19,25 @@ public class GaperBehavior extends Monstre {
     }
 
     public void move(List<StaticEntity> entity, Hero hero) {
-    if(getPosition().getX()<0.9 && getPosition().getX()>0.1 && getPosition().getY()<0.9 && getPosition().getY()>0.1){}
-        if (System.currentTimeMillis() - lastTimeMove > 750 || System.currentTimeMillis() - lastTimeMove < 0) {
-            Vector2 directionGaper = new Vector2();
+        if (getPosition().getX() < 0.9 && getPosition().getX() > 0.1 && getPosition().getY() < 0.9
+                && getPosition().getY() > 0.1) {
+            if (System.currentTimeMillis() - lastTimeMove > 750 || System.currentTimeMillis() - lastTimeMove < 0) {
+                Vector2 directionGaper = new Vector2();
 
-            // We choose with random the direction of the Gaper
-            directionGaper.setX(Math.random() * 2 - 1);
-            directionGaper.setY(Math.random() * 2 - 1);
-            directionGaper.euclidianNormalize(1);
+                // We choose with random the direction of the Gaper
+                directionGaper.setX(Math.random() * 2 - 1);
+                directionGaper.setY(Math.random() * 2 - 1);
+                directionGaper.euclidianNormalize(1);
 
-            direction = directionGaper;
+                direction = directionGaper;
 
-            lastTimeMove = System.currentTimeMillis();
+                lastTimeMove = System.currentTimeMillis();
+            }
+
+            setPosition(position.addVector(direction.scalarMultiplication(speed)));
         }
 
-        setPosition(position.addVector(direction.scalarMultiplication(speed)));
     }
-    
 
     public void attack(List<Projectile> projectiles, Hero hero) {
 
