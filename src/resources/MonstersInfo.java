@@ -12,6 +12,8 @@ public class MonstersInfo
     public static final int SPIDER_LIFE = 5;
     public static final Vector2 SPIDER_SIZE = RoomInfos.TILE_SIZE.scalarMultiplication(0.5);
     public static final double SPIDER_SPEED = 0.005;
+    public static final int SPIDER_MOVE_TIME = 750;
+    public static final int SPIDER_PAUSE_TIME = 350;
 
     public static final int GAPER_LIFE = 20;
     public static final Vector2 GAPER_SIZE = RoomInfos.TILE_SIZE.scalarMultiplication(1.0);
