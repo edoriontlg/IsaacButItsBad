@@ -7,6 +7,7 @@ import gameobjects.Hero;
 import gameobjects.Projectile;
 import gameobjects.StaticEntity;
 import libraries.Vector2;
+import resources.MonstersInfo;
 import resources.RoomInfos;
 
 public class SpiderBehavior extends Monstre {
@@ -20,7 +21,8 @@ public class SpiderBehavior extends Monstre {
     public void move(List<StaticEntity> entity, Hero hero) {
 
         // We use a timer to make the spider pause between movement
-        if (System.currentTimeMillis() - lastTime > 750 || System.currentTimeMillis() - lastTime < 0) {
+        if (System.currentTimeMillis() - lastTime < MonstersInfo.SPIDER_MOVE_TIME) setPosition(position.addVector(direction.scalarMultiplication(speed)));
+        else if (System.currentTimeMillis() - lastTime > MonstersInfo.SPIDER_MOVE_TIME + MonstersInfo.SPIDER_PAUSE_TIME) {
 
             
             Vector2 directionSpider = new Vector2();
@@ -35,10 +37,6 @@ public class SpiderBehavior extends Monstre {
 
             lastTime = System.currentTimeMillis();
         }
-
-        
-
-        setPosition(position.addVector(direction.scalarMultiplication(speed)));
 
 
     }
