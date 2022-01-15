@@ -20,6 +20,7 @@ public class ImagePaths
 	public static final String HALF_HEART_PICKABLE = "images/Half_Red_Heart.png";
 	public static final String BOMB = "images/Bomb.png";
 	public static final String COIN = "images/Penny.png";
+	public static final String PIECE = "images/pennyy.png";
 	public static final String NICKEL = "images/Nickel.png";
 	public static final String DIME = "images/Dime.png";
 
