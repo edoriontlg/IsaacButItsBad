@@ -11,8 +11,8 @@ import resources.*;
 public class Shop extends Room{
    
     //Initialise un magasin
-    public Shop(Hero hero, String type){
-        super(hero, type);
+    public Shop(Hero hero){
+        super(hero);
 
 
         ObjectPickable.add(new ObjectOnGround(new Vector2(0.3,0.6), RoomInfos.HALF_TILE_SIZE, ImagePaths.BLOOD_OF_THE_MARTYR));

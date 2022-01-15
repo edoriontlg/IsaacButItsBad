@@ -51,16 +51,14 @@ public class Room {
 	private Vector2 rightRoomPos = new Vector2(
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
-	private String type;
 
-	public Room(Hero hero, String type) {
+	public Room(Hero hero) {
 		this.hero = hero;
 		this.BACKGROUND_TILE = StdDraw.getImage(ImagePaths.BACKGROUND_TILE_1);
 		this.WALL = StdDraw.getImage(ImagePaths.WALL);
 		this.CORNER = StdDraw.getImage(ImagePaths.CORNER);
 		this.DOOR_CLOSED = StdDraw.getImage(ImagePaths.CLOSED_DOOR);
 		this.DOOR_OPEN = StdDraw.getImage(ImagePaths.OPENED_DOOR);
-		this.type = type;
 	}
 
 	public Room(Hero hero, Room topRoom, Room bottomRoom, Room leftRoom, Room rightRoom) {
@@ -143,18 +141,8 @@ public class Room {
 		// We clear all entities that needs to be deleted
 		clearDeadEntities();
 
-		if (!roomFinished && monstres.isEmpty()) {
-			roomFinished = true;
-			if (this.type == "monstre") {
-				ObjectPickable
-						.add(new ObjectOnGround(new Vector2(0.4, 0.4), RoomInfos.HALF_TILE_SIZE, "images/Penny.png"));
-				ObjectPickable
-						.add(new ObjectOnGround(new Vector2(0.6, 0.4), RoomInfos.HALF_TILE_SIZE, "images/Nickel.png"));
-				ObjectPickable
-						.add(new ObjectOnGround(new Vector2(0.5, 0.5), RoomInfos.HALF_TILE_SIZE, "images/Dime.png"));
-
-			}
-		}
+		
+		if (!roomFinished && monstres.isEmpty()) roomFinished = true;
 	}
 
 	// Gère la collision des larmes
@@ -344,7 +332,7 @@ public class Room {
 
 	// Création d'un donjon avec des salles aléatoires
 	public static Room createDungeon(Room[] rooms, BossRoom bossRoom, Hero hero) {
-		Room result = new StartRoom(hero, "start");
+		Room result = new StartRoom(hero);
 
 		Room currentRoomToEdit = result;
 

@@ -27,15 +27,20 @@ public class Main {
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED,
 				ImagePaths.ISAAC, 6, 0, 1);
 
-		Room rooms1 = new MonsterRoom(isaac, "monstre");
-		Room rooms2 = new MonsterRoom(isaac, "monstre");
-		Room rooms3 = new Shop(isaac, "shop");
-		BossRoom bossRoom = new BossRoom(isaac, "monstre");
 
+		//On créée les rooms
+		Room rooms1 = new MonsterRoom(isaac);
+		Room rooms2 = new MonsterRoom(isaac);
+		Room rooms3 = new Shop(isaac);
+		BossRoom bossRoom = new BossRoom(isaac);
+
+		//On créée notre tableau
 		Room[] rooms = { rooms1, rooms2, rooms3 };
 
+		//Génération du donjon
 		Room dungeon = Room.createDungeon(rooms, bossRoom, isaac);
 
+		//On créée le monde
 		world = new GameWorld(isaac, dungeon);
 		initializeDisplay();
 
