@@ -47,4 +47,6 @@ public class ImagePaths
 	public static final String BACKGROUND_TILE_1 = "images/BackgroundTile1.png";
 	public static final String CORNER = "images/CornerUpRight.png";
 	public static final String WALL = "images/WallRIght.png";
+
+	public static final String DIX = "images/Dix.png";
 }
