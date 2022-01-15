@@ -9,10 +9,11 @@ import monsters.Monstre.MONSTER_TYPE;
 import resources.*;
 
 public class MonsterRoom extends Room {
+    private boolean hasFinishedCalled = false;
 
     //Initialise une salle avec des monstres aléatoires
-    public MonsterRoom(Hero hero, String type) {
-        super(hero, type);
+    public MonsterRoom(Hero hero) {
+        super(hero);
         
         StaticEntities.add(new StaticEntity(positionFromTileIndex(2, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
 		StaticEntities.add(new StaticEntity(positionFromTileIndex(3, 8), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
@@ -29,4 +30,18 @@ public class MonsterRoom extends Room {
             }
         }
     } 
+
+    @Override
+    public void updateRoom() {
+        super.updateRoom();
+		if (roomFinished && !hasFinishedCalled) {
+            hasFinishedCalled = true;
+			ObjectPickable
+					.add(new ObjectOnGround(new Vector2(0.4, 0.4), RoomInfos.HALF_TILE_SIZE, ImagePaths.COIN));
+			ObjectPickable
+					.add(new ObjectOnGround(new Vector2(0.6, 0.4), RoomInfos.HALF_TILE_SIZE, ImagePaths.NICKEL));
+			ObjectPickable
+					.add(new ObjectOnGround(new Vector2(0.5, 0.5), RoomInfos.HALF_TILE_SIZE, ImagePaths.DIME));
+		}
+    }
 }
