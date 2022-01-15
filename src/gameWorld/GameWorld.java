@@ -27,11 +27,7 @@ public class GameWorld {
 	}
 
 	public boolean gameOver() {
-		if (hero.getLife() == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return hero.getLife() == 0;
 	}
 
 	

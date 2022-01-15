@@ -29,12 +29,12 @@ public class Main {
 
 		Room rooms1 = new MonsterRoom(isaac, "monstre");
 		Room rooms2 = new MonsterRoom(isaac, "monstre");
-		Room rooms3 = new BossRoom(isaac, "monstre");
-		Room rooms4 = new Shop(isaac, "shop");
+		Room rooms3 = new Shop(isaac, "shop");
+		BossRoom bossRoom = new BossRoom(isaac, "monstre");
 
-		Room[] rooms = { rooms1, rooms2, rooms3, rooms4 };
+		Room[] rooms = { rooms1, rooms2, rooms3 };
 
-		Room dungeon = Room.createDungeon(rooms, isaac);
+		Room dungeon = Room.createDungeon(rooms, bossRoom, isaac);
 
 		world = new GameWorld(isaac, dungeon);
 		initializeDisplay();
@@ -42,12 +42,10 @@ public class Main {
 		// Main loop of the game
 		while (!world.gameOver()) {
 			processNextStep(world);
-			if (rooms3.win() == true) {
-				break;}
-			
+			if (world.gameOver()) break;
 		}
 
-		if (rooms3.win() == true) {
+		if (bossRoom.win() == true) {
 			StdDraw.picture(0.5, 0.5, ImagePaths.WIN_SCREEN, 1, 1);
 			StdDraw.show();
 		} else {

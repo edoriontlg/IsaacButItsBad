@@ -25,6 +25,7 @@ public class Hero {
 	private int money;
 	private long lastTime = 0;
 	private int attack;
+    public int cheatDamage = 0;
 
 	public Hero(Vector2 position, Vector2 size, double speed, String imagePath, int life, int money, int attack) {
 		this.position = position;
@@ -41,10 +42,16 @@ public class Hero {
 		move(entities);
 	}
 
-	//Fait bouger notre héro dans le sens du vecteur et l'empèche de sortir de la salle
+	// Fait bouger notre héro dans le sens du vecteur et l'empèche de sortir de la
+	// salle
 	private void move(List<StaticEntity> entities) {
 		Vector2 normalizedDirection = getNormalizedDirection();
+		if (normalizedDirection.euclidianNorm() == 0) return;
+
+
 		Vector2 positionAfterMoving = getPosition().addVector(normalizedDirection);
+
+		//On vérifie que la position est valide (pas d'obstacle)
 		for (StaticEntity entity : entities) {
 			if (Physics.rectangleCollision(positionAfterMoving, size, entity.position, entity.size)) {
 				direction = new Vector2();
@@ -52,8 +59,7 @@ public class Hero {
 			}
 		}
 
-
-		//Pour chaque côté de la salle, empèche le héro d'avancer
+		// Pour chaque côté de la salle, empèche le héro d'avancer
 		double halfSize = size.getX() / 2;
 		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
 
@@ -76,7 +82,7 @@ public class Hero {
 		}
 
 		normalizedDirection = getNormalizedDirection();
-		positionAfterMoving = getPosition().addVector(normalizedDirection); 
+		positionAfterMoving = getPosition().addVector(normalizedDirection);
 
 		setPosition(positionAfterMoving);
 		direction = new Vector2();
@@ -190,31 +196,31 @@ public class Hero {
 		}
 	}
 
-	//Permet au héro de tirer à chaque fois que l'on appuie sur les touches directionnelles avec un délai entre chaque larme
+	// Permet au héro de tirer à chaque fois que l'on appuie sur les touches
+	// directionnelles avec un délai entre chaque larme
 	public void processKeysForShooting(Room currentRoom) {
 		if (System.currentTimeMillis() - lastTime > 250 || System.currentTimeMillis() - lastTime < 0) {
 			if (StdDraw.isKeyPressed(Controls.shootUp)) {
-				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						0.1, "images/tear.png", new Vector2(0, 1));
+				Projectile tear = Projectile.createTear(getPosition(), new Vector2(0, 1));
 				currentRoom.tears.add(tear);
+
 				lastTime = System.currentTimeMillis();
 			} else if (StdDraw.isKeyPressed(Controls.shootDown)) {
-				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						0.1, "images/tear.png", new Vector2(0, -1));
+				Projectile tear = Projectile.createTear(getPosition(), new Vector2(0, -1));
 				currentRoom.tears.add(tear);
+
 				lastTime = System.currentTimeMillis();
 			} else if (StdDraw.isKeyPressed(Controls.shootRight)) {
-				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						0.1, "images/tear.png", new Vector2(1, 0));
+				Projectile tear = Projectile.createTear(getPosition(), new Vector2(1, 0));
 				currentRoom.tears.add(tear);
+
 				lastTime = System.currentTimeMillis();
 			} else if (StdDraw.isKeyPressed(Controls.shootLeft)) {
-				Projectile tear = new Projectile(getPosition(), RoomInfos.TILE_SIZE.scalarMultiplication(0.4),
-						0.1, "images/tear.png", new Vector2(-1, 0));
+				Projectile tear = Projectile.createTear(getPosition(), new Vector2(-1, 0));
 				currentRoom.tears.add(tear);
+
 				lastTime = System.currentTimeMillis();
 			}
-
 		}
 	}
 

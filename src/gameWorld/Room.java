@@ -18,7 +18,6 @@ public class Room {
 	private Image CORNER;
 	private Image DOOR_OPEN;
 	private Image DOOR_CLOSED;
-	private int cheatDmg = 0;
 
 	// We make it protected so other rooms can use it, but not other classes.
 	protected List<StaticEntity> StaticEntities = new ArrayList<StaticEntity>();
@@ -44,7 +43,7 @@ public class Room {
 	private Vector2 bottomRoomPos = new Vector2(
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
 			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY());
-	public Room lefRoom;
+	public Room leftRoom;
 	private Vector2 leftRoomPos = new Vector2(
 			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
 			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2);
@@ -72,7 +71,7 @@ public class Room {
 
 		this.topRoom = topRoom;
 		this.bottomRoom = bottomRoom;
-		this.lefRoom = leftRoom;
+		this.leftRoom = leftRoom;
 		this.rightRoom = rightRoom;
 	}
 
@@ -105,13 +104,13 @@ public class Room {
 
 				hero.getPosition().setY(0.85);
 				GameWorld.UpdateRoom(bottomRoom);
-			} else if (lefRoom != null && Physics.rectangleCollision(leftRoomPos,
+			} else if (leftRoom != null && Physics.rectangleCollision(leftRoomPos,
 					RoomInfos.TILE_SIZE.scalarMultiplication(1.5),
 					hero.getPosition(),
 					hero.getSize())) {
 
 				hero.getPosition().setX(0.85);
-				GameWorld.UpdateRoom(lefRoom);
+				GameWorld.UpdateRoom(leftRoom);
 			}
 
 		}
@@ -174,7 +173,7 @@ public class Room {
 
 					// We take out 1 life point to the monster and check if he has 0 life point to
 					// remove it
-					monstre.setLife(monstre.getLife() - hero.getAttack() - cheatDmg);
+					monstre.setLife(monstre.getLife() - hero.getAttack() - hero.cheatDamage);
 					if (monstre.getLife() <= 0) {
 						monstresToRemove.add(monstre);
 					}
@@ -281,7 +280,7 @@ public class Room {
 						DOOR_CLOSED, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
 		}
 
-		if (lefRoom != null) {
+		if (leftRoom != null) {
 			if (roomFinished)
 				StdDraw.pictureIMG(leftRoomPos.getX(), leftRoomPos.getY(),
 						DOOR_OPEN, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 90);
@@ -322,10 +321,6 @@ public class Room {
 			if (proj != null)
 				proj.drawGameObject();
 		}
-
-		if (this.type == "shop") {
-			Shop.drawShop();
-		}
 	}
 
 	/*
@@ -335,29 +330,55 @@ public class Room {
 	 * 
 	 */
 	public void removeMonster() {
-
 		monstres.clear();
 		projectiles.clear();
-
 	}
 
 	public void instantKill() {
-		if (cheatDmg == 0) {
-			cheatDmg = 1000;
+		if (hero.cheatDamage == 0) {
+			hero.cheatDamage = 1000;
 		} else {
-			cheatDmg = 0;
+			hero.cheatDamage = 0;
 		}
 	}
 
 	// Création d'un donjon avec des salles aléatoires
-	public static Room createDungeon(Room[] rooms, Hero hero) {
+	public static Room createDungeon(Room[] rooms, BossRoom bossRoom, Hero hero) {
 		Room result = new StartRoom(hero, "start");
 
 		Room currentRoomToEdit = result;
 
+		// For each room inside our loop
 		for (int i = 0; i < rooms.length; i++) {
 			int choice = new Random().nextInt(2);
 			int roomPos = new Random().nextInt(4);
+
+			switch (roomPos) {
+				case 0:
+					if (currentRoomToEdit.topRoom != null) {
+						i--;
+						continue;
+					}
+					break;
+				case 1:
+					if (currentRoomToEdit.rightRoom != null) {
+						i--;
+						continue;
+					}
+					break;
+				case 2:
+					if (currentRoomToEdit.bottomRoom != null) {
+						i--;
+						continue;
+					}
+					break;
+				default:
+					if (currentRoomToEdit.leftRoom != null) {
+						i--;
+						continue;
+					}
+					break;
+			}
 
 			switch (choice) {
 				case 0:
@@ -368,14 +389,14 @@ public class Room {
 							break;
 						case 1:
 							currentRoomToEdit.rightRoom = rooms[i];
-							rooms[i].lefRoom = currentRoomToEdit;
+							rooms[i].leftRoom = currentRoomToEdit;
 							break;
 						case 2:
 							currentRoomToEdit.bottomRoom = rooms[i];
 							rooms[i].topRoom = currentRoomToEdit;
 							break;
 						default:
-							currentRoomToEdit.lefRoom = rooms[i];
+							currentRoomToEdit.leftRoom = rooms[i];
 							rooms[i].rightRoom = currentRoomToEdit;
 							break;
 					}
@@ -388,14 +409,14 @@ public class Room {
 							break;
 						case 1:
 							currentRoomToEdit.rightRoom = rooms[i];
-							rooms[i].lefRoom = currentRoomToEdit;
+							rooms[i].leftRoom = currentRoomToEdit;
 							break;
 						case 2:
 							currentRoomToEdit.bottomRoom = rooms[i];
 							rooms[i].topRoom = currentRoomToEdit;
 							break;
 						default:
-							currentRoomToEdit.lefRoom = rooms[i];
+							currentRoomToEdit.leftRoom = rooms[i];
 							rooms[i].rightRoom = currentRoomToEdit;
 							break;
 					}
@@ -404,12 +425,33 @@ public class Room {
 			}
 		}
 
+		// Lastly we add the bost room at the end
+		int roomPos = new Random().nextInt(4);
+		switch (roomPos) {
+			case 0:
+				currentRoomToEdit.topRoom = bossRoom;
+				bossRoom.bottomRoom = currentRoomToEdit;
+				break;
+			case 1:
+				currentRoomToEdit.rightRoom = bossRoom;
+				bossRoom.leftRoom = currentRoomToEdit;
+				break;
+			case 2:
+				currentRoomToEdit.bottomRoom = bossRoom;
+				bossRoom.topRoom = currentRoomToEdit;
+				break;
+			default:
+				currentRoomToEdit.leftRoom = bossRoom;
+				bossRoom.rightRoom = currentRoomToEdit;
+				break;
+		}
+
 		return result;
 	}
 
-	public boolean win(){
-		for(Monstre monstre : monstres){
-			if(monstre.getType() == MONSTER_TYPE.GAPER){
+	public boolean win() {
+		for (Monstre monstre : monstres) {
+			if (monstre.getType() == MONSTER_TYPE.GAPER) {
 				return false;
 			}
 		}
