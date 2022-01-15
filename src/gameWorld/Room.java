@@ -145,7 +145,7 @@ public class Room {
 		if (!roomFinished && monstres.isEmpty()) roomFinished = true;
 	}
 
-	// Gère la collision des larmes
+	
 	private void processPhysicsTears() {
 		// For each tear if it's outside the map delete it
 		for (Projectile larme : tears) {
@@ -330,6 +330,14 @@ public class Room {
 		}
 	}
 
+	
+	/** 
+	 * Génère un donjon à partir de salles, d'une salle de boss et d'un heros
+	 * @param rooms
+	 * @param bossRoom
+	 * @param hero
+	 * @return Room
+	 */
 	// Création d'un donjon avec des salles aléatoires
 	public static Room createDungeon(Room[] rooms, BossRoom bossRoom, Hero hero) {
 		Room result = new StartRoom(hero);
