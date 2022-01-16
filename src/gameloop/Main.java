@@ -23,6 +23,25 @@ public class Main {
 	public static GameWorld world;
 
 	public static void main(String[] args) {
+
+		/**
+		 * Voici le code de notre projet PO ISAAC
+		 * Axel Allain et Théo Le Goc
+		 * 
+		 * Le code est très peu optimisé, si vous activez les options de débuggage dans DisplayInfo.java vous
+		 * verrez un temps de rendu et d'update très long, résultant
+		 * en une grosse perte de frames. Le problème peut être réglé mais nous avons voulu nous concentrer sur 
+		 * le reste.
+		 * 
+		 * Vous pouvez modifier les propriétés des salles et des monstres dans
+		 * RoomInfos.java et MonstresInfo.java respectivement.
+		 * 
+		 * Le code n'est pas forcément au bon endroit mais nous n'avons tout deux
+		 * pas la même façon de coder, d'ou la faible cohérence du code parfois.
+		 * 
+		 */
+
+
 		// Hero, world and display initialisation.
 		Hero isaac = new Hero(RoomInfos.POSITION_DOWN_OF_ROOM, HeroInfos.ISAAC_SIZE, HeroInfos.ISAAC_SPEED,
 				ImagePaths.ISAAC, 6, 0, 1);
@@ -34,7 +53,7 @@ public class Main {
 		Room rooms3 = new Shop(isaac);
 		BossRoom bossRoom = new BossRoom(isaac);
 
-		//On créée notre tableau
+		//On créée notre tableau de salles pour le créateur de donjon
 		Room[] rooms = { rooms1, rooms2, rooms3 };
 
 		//Génération du donjon

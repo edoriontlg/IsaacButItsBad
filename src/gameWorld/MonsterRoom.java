@@ -20,7 +20,7 @@ public class MonsterRoom extends Room {
         StaticEntities
                 .add(new StaticEntity(RoomInfos.positionFromTileIndex(3, 8), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
         StaticEntities
-                .add(new StaticEntity(RoomInfos.positionFromTileIndex(8, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+                .add(new StaticEntity(RoomInfos.positionFromTileIndex(7, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
         StaticEntities
                 .add(new StaticEntity(RoomInfos.positionFromTileIndex(5, 3), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
 
