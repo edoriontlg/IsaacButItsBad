@@ -15,6 +15,7 @@ public class GaperBehavior extends Monstre {
 
     private long lastTimeMove = 0;
     private long lastTimeProj = 0;
+    private boolean hasTouchedHero = false;
 
     public GaperBehavior(Vector2 position, Vector2 size, double speed, String imagePath, int life) {
         super(position, size, speed, imagePath, life, MONSTER_TYPE.GAPER);
@@ -65,6 +66,14 @@ public class GaperBehavior extends Monstre {
             projectiles.add(projo);
 
             lastTimeProj = System.currentTimeMillis();
+        }
+
+        
+        if (!hasTouchedHero && Physics.rectangleCollision(getPosition(), getSize(), hero.getPosition(), hero.getSize())) {
+            hero.setLife(hero.getLife() - 1);
+            hasTouchedHero = true;
+        } else if (hasTouchedHero && !Physics.rectangleCollision(getPosition(), getSize(), hero.getPosition(), hero.getSize())) {
+            hasTouchedHero = false;
         }
     }
 }
