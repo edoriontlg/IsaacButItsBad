@@ -15,10 +15,10 @@ public class MonsterRoom extends Room {
     public MonsterRoom(Hero hero) {
         super(hero);
         
-        StaticEntities.add(new StaticEntity(positionFromTileIndex(2, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(3, 8), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-        StaticEntities.add(new StaticEntity(positionFromTileIndex(8, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
-		StaticEntities.add(new StaticEntity(positionFromTileIndex(5, 3), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+        StaticEntities.add(new StaticEntity(RoomInfos.positionFromTileIndex(2, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+		StaticEntities.add(new StaticEntity(RoomInfos.positionFromTileIndex(3, 8), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+        StaticEntities.add(new StaticEntity(RoomInfos.positionFromTileIndex(8, 5), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
+		StaticEntities.add(new StaticEntity(RoomInfos.positionFromTileIndex(5, 3), RoomInfos.TILE_SIZE, ImagePaths.ROCK));
         
         for(int i = 0 ; i < 4; i++){
             int monstre = new Random().nextInt(2);

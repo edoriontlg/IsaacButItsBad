@@ -61,23 +61,20 @@ public class Hero {
 
 		// Pour chaque côté de la salle, empèche le héro d'avancer
 		double halfSize = size.getX() / 2;
-		double tileHalfSize = RoomInfos.HALF_TILE_SIZE.getX();
 
-		if (positionAfterMoving.getX() + halfSize > Room.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX()
-				- tileHalfSize) {
+		if (positionAfterMoving.getX() + halfSize > RoomInfos.maxHorizontal) {
 			direction.setX(0);
 		}
 
-		if (positionAfterMoving.getX() - halfSize < Room.positionFromTileIndex(1, 0).getX() - tileHalfSize) {
+		if (positionAfterMoving.getX() - halfSize < RoomInfos.minHorizontal) {
 			direction.setX(0);
 		}
 
-		if (positionAfterMoving.getY() + halfSize > Room.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY()
-				- tileHalfSize) {
+		if (positionAfterMoving.getY() + halfSize > RoomInfos.maxVertical) {
 			direction.setY(0);
 		}
 
-		if (positionAfterMoving.getY() - halfSize < Room.positionFromTileIndex(0, 1).getY() - tileHalfSize) {
+		if (positionAfterMoving.getY() - halfSize < RoomInfos.minVertical) {
 			direction.setY(0);
 		}
 

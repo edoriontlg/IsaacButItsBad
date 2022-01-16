@@ -37,20 +37,20 @@ public class Room {
 	// Other rooms
 	public Room topRoom;
 	private Vector2 topRoomPos = new Vector2(
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY());
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX() / (double) 2,
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY());
 	public Room bottomRoom;
 	private Vector2 bottomRoomPos = new Vector2(
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY());
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX() / (double) 2,
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY());
 	public Room leftRoom;
 	private Vector2 leftRoomPos = new Vector2(
-			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
-			positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2);
+			RoomInfos.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
+			RoomInfos.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY() / (double) 2);
 	public Room rightRoom;
 	private Vector2 rightRoomPos = new Vector2(
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
-			positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
+			RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY() / (double) 2);
 
 	public Room(Hero hero) {
 		this.hero = hero;
@@ -141,11 +141,10 @@ public class Room {
 		// We clear all entities that needs to be deleted
 		clearDeadEntities();
 
-		
-		if (!roomFinished && monstres.isEmpty()) roomFinished = true;
+		if (!roomFinished && monstres.isEmpty())
+			roomFinished = true;
 	}
 
-	
 	private void processPhysicsTears() {
 		// For each tear if it's outside the map delete it
 		for (Projectile larme : tears) {
@@ -211,7 +210,7 @@ public class Room {
 		// For every CENTER TILE
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++) {
 			for (int j = 1; j < RoomInfos.NB_TILES - 1; j++) {
-				Vector2 position = positionFromTileIndex(i, j);
+				Vector2 position = RoomInfos.positionFromTileIndex(i, j);
 				StdDraw.pictureIMG(position.getX(), position.getY(), this.BACKGROUND_TILE, RoomInfos.TILE_WIDTH,
 						RoomInfos.TILE_HEIGHT, 0);
 				// StdDraw.filledRectangle(position.getX(), position.getY(),
@@ -221,31 +220,32 @@ public class Room {
 
 		// Draw walls
 		for (int i = 1; i < RoomInfos.NB_TILES - 1; i++) {
-			Vector2 position = positionFromTileIndex(0, i);
+			Vector2 position = RoomInfos.positionFromTileIndex(0, i);
 			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT,
 					180);
-			position = positionFromTileIndex(RoomInfos.NB_TILES - 1, i);
+			position = RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, i);
 			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT,
 					0);
-			position = positionFromTileIndex(i, 0);
+			position = RoomInfos.positionFromTileIndex(i, 0);
 			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT,
 					270);
-			position = positionFromTileIndex(i, RoomInfos.NB_TILES - 1);
+			position = RoomInfos.positionFromTileIndex(i, RoomInfos.NB_TILES - 1);
 			StdDraw.pictureIMG(position.getX(), position.getY(), this.WALL, RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT,
 					90);
 		}
 
 		// Draw corners
-		StdDraw.pictureIMG(positionFromTileIndex(0, 0).getX(), positionFromTileIndex(0, 0).getY(), this.CORNER,
+		StdDraw.pictureIMG(RoomInfos.positionFromTileIndex(0, 0).getX(), RoomInfos.positionFromTileIndex(0, 0).getY(),
+				this.CORNER,
 				RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 180);
-		StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(),
-				positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
+		StdDraw.pictureIMG(RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getX(),
+				RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, 0).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
 				RoomInfos.TILE_HEIGHT, 270);
-		StdDraw.pictureIMG(positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
-				positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), this.CORNER,
+		StdDraw.pictureIMG(RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getX(),
+				RoomInfos.positionFromTileIndex(RoomInfos.NB_TILES - 1, RoomInfos.NB_TILES - 1).getY(), this.CORNER,
 				RoomInfos.TILE_WIDTH, RoomInfos.TILE_HEIGHT, 0);
-		StdDraw.pictureIMG(positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
-				positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
+		StdDraw.pictureIMG(RoomInfos.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getX(),
+				RoomInfos.positionFromTileIndex(0, RoomInfos.NB_TILES - 1).getY(), this.CORNER, RoomInfos.TILE_WIDTH,
 				RoomInfos.TILE_HEIGHT, 90);
 
 		// Draw doors
@@ -330,10 +330,14 @@ public class Room {
 		}
 	}
 
-	
-	/** 
-	 * Génère un donjon à partir d'un tableau de salles, d'une salle de boss et d'un heros
+	/**
+	 * Génère un donjon à partir d'un tableau de salles, d'une salle de boss et d'un
+	 * heros
 	 * L'ordre est le même que dans le tableau
+	 * 
+	 * Cette fonction n'est pas parfaite, elle va loop a l'infini si il y a plus de 4 salles a connecter dans la même piece.
+	 * On pourrais utiliser des matrices pour rendre ça plus réaliste
+	 * 
 	 * @param rooms
 	 * @param bossRoom
 	 * @param hero
@@ -375,6 +379,14 @@ public class Room {
 					}
 					break;
 			}
+
+			/*
+			 * We place the room according to the choice we made :
+			 * 0: Place in this room and stay in it
+			 * 1: Place in this room then move inside the new room
+			 * 
+			 * roomPos is 0-3 and will indicate if it's top, right, bottom or left
+			 */
 
 			switch (choice) {
 				case 0:
@@ -422,24 +434,51 @@ public class Room {
 		}
 
 		// Lastly we add the bost room at the end
-		int roomPos = new Random().nextInt(4);
-		switch (roomPos) {
-			case 0:
-				currentRoomToEdit.topRoom = bossRoom;
-				bossRoom.bottomRoom = currentRoomToEdit;
-				break;
-			case 1:
-				currentRoomToEdit.rightRoom = bossRoom;
-				bossRoom.leftRoom = currentRoomToEdit;
-				break;
-			case 2:
-				currentRoomToEdit.bottomRoom = bossRoom;
-				bossRoom.topRoom = currentRoomToEdit;
-				break;
-			default:
-				currentRoomToEdit.leftRoom = bossRoom;
-				bossRoom.rightRoom = currentRoomToEdit;
-				break;
+		boolean isBossRoomPlaced = false;
+		while (!isBossRoomPlaced) {
+			int roomPos = new Random().nextInt(4);
+
+			// We check if the position is valid, if not we repeat
+			switch (roomPos) {
+				case 0:
+					if (currentRoomToEdit.topRoom != null)
+						continue;
+					break;
+				case 1:
+					if (currentRoomToEdit.rightRoom != null)
+						continue;
+					break;
+				case 2:
+					if (currentRoomToEdit.bottomRoom != null)
+						continue;
+					break;
+				default:
+					if (currentRoomToEdit.leftRoom != null)
+						continue;
+					break;
+			}
+
+			// We place the room and indicate when it's done
+			switch (roomPos) {
+				case 0:
+					currentRoomToEdit.topRoom = bossRoom;
+					bossRoom.bottomRoom = currentRoomToEdit;
+					break;
+				case 1:
+					currentRoomToEdit.rightRoom = bossRoom;
+					bossRoom.leftRoom = currentRoomToEdit;
+					break;
+				case 2:
+					currentRoomToEdit.bottomRoom = bossRoom;
+					bossRoom.topRoom = currentRoomToEdit;
+					break;
+				default:
+					currentRoomToEdit.leftRoom = bossRoom;
+					bossRoom.rightRoom = currentRoomToEdit;
+					break;
+			}
+
+			isBossRoomPlaced = true;
 		}
 
 		return result;
@@ -452,17 +491,5 @@ public class Room {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Convert a tile index to a 0-1 position.
-	 * 
-	 * @param indexX
-	 * @param indexY
-	 * @return
-	 */
-	public static Vector2 positionFromTileIndex(int indexX, int indexY) {
-		return new Vector2(indexX * RoomInfos.TILE_WIDTH + RoomInfos.HALF_TILE_SIZE.getX(),
-				indexY * RoomInfos.TILE_HEIGHT + RoomInfos.HALF_TILE_SIZE.getY());
 	}
 }

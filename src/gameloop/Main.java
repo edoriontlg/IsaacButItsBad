@@ -41,7 +41,7 @@ public class Main {
 		Room dungeon = Room.createDungeon(rooms, bossRoom, isaac);
 
 		//On créée le monde
-		world = new GameWorld(isaac, rooms3);
+		world = new GameWorld(isaac, dungeon);
 		initializeDisplay();
 
 		// Main loop of the game

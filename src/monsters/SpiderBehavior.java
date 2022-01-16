@@ -21,7 +21,17 @@ public class SpiderBehavior extends Monstre {
     public void move(List<StaticEntity> entity, Hero hero) {
 
         // We use a timer to make the spider pause between movement
-        if (System.currentTimeMillis() - lastTime < MonstersInfo.SPIDER_MOVE_TIME) setPosition(position.addVector(direction.scalarMultiplication(speed)));
+        if (System.currentTimeMillis() - lastTime < MonstersInfo.SPIDER_MOVE_TIME) {
+
+            Vector2 newPos = position.addVector(direction.scalarMultiplication(speed));
+            if (newPos.getX() + getSize().getX() > RoomInfos.maxHorizontal
+                    || newPos.getY() + getSize().getY() > RoomInfos.maxVertical
+                    || newPos.getX() - getSize().getX() < RoomInfos.minHorizontal
+                    || newPos.getY() - getSize().getY() < RoomInfos.minVertical)
+                return;
+    
+            setPosition(newPos);
+        }
         else if (System.currentTimeMillis() - lastTime > MonstersInfo.SPIDER_MOVE_TIME + MonstersInfo.SPIDER_PAUSE_TIME) {
 
             
@@ -37,8 +47,6 @@ public class SpiderBehavior extends Monstre {
 
             lastTime = System.currentTimeMillis();
         }
-
-
     }
 
     public void attack(List<Projectile> projectiles, Hero hero) {

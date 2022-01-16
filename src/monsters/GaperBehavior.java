@@ -1,11 +1,13 @@
 package monsters;
 
+import java.io.Console;
 import java.io.ObjectInputStream.GetField;
 import java.util.List;
 
 import gameobjects.Hero;
 import gameobjects.Projectile;
 import gameobjects.StaticEntity;
+import libraries.Physics;
 import libraries.Vector2;
 import resources.*;
 
@@ -19,22 +21,34 @@ public class GaperBehavior extends Monstre {
     }
 
     public void move(List<StaticEntity> entity, Hero hero) {
-            if (System.currentTimeMillis() - lastTimeMove > 750 || System.currentTimeMillis() - lastTimeMove < 0) {
-                Vector2 directionGaper = new Vector2();
 
-                // We choose with random the direction of the Gaper
-                directionGaper.setX(Math.random() * 2 - 1);
-                directionGaper.setY(Math.random() * 2 - 1);
-                directionGaper.euclidianNormalize(1);
+        // We use a timer to make the spider pause between movement
+        if (System.currentTimeMillis() - lastTimeMove < MonstersInfo.GAPER_MOVE_TIME) {
 
-                direction = directionGaper;
+            Vector2 newPos = position.addVector(direction.scalarMultiplication(speed));
+            if (newPos.getX() + getSize().getX() > RoomInfos.maxHorizontal
+                    || newPos.getY() + getSize().getY() > RoomInfos.maxVertical
+                    || newPos.getX() - getSize().getX() < RoomInfos.minHorizontal
+                    || newPos.getY() - getSize().getY() < RoomInfos.minVertical)
+                return;
+    
+            setPosition(newPos);
+        }
+        else if (System.currentTimeMillis() - lastTimeMove > MonstersInfo.GAPER_MOVE_TIME + MonstersInfo.GAPER_PAUSE_TIME) {
 
-                lastTimeMove = System.currentTimeMillis();
-            }
+            
+            Vector2 directioGaper = new Vector2();
 
-            setPosition(position.addVector(direction.scalarMultiplication(speed)));
-        
+            // We choose with random the direction of the spider
+            directioGaper.setX(Math.random() * 2 - 1);
+            directioGaper.setY(Math.random() * 2 - 1);
+            directioGaper.euclidianNormalize(1.0);
 
+            direction = directioGaper;
+
+
+            lastTimeMove = System.currentTimeMillis();
+        }
     }
 
     public void attack(List<Projectile> projectiles, Hero hero) {
