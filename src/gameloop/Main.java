@@ -45,7 +45,7 @@ public class Main {
 		initializeDisplay();
 
 		// Main loop of the game
-		while (!world.gameOver()) {
+		while (!world.gameOver() && bossRoom.win() == false) {
 			processNextStep(world);
 			if (world.gameOver()) break;
 		}
@@ -56,7 +56,6 @@ public class Main {
 		} else {
 			StdDraw.picture(0.5, 0.5, ImagePaths.LOSE_SCREEN, 1, 1);
 			StdDraw.show();
-
 		}
 
 	}
