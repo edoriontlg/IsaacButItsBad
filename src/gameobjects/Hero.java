@@ -102,8 +102,7 @@ public class Hero {
 
 			// For each, if collision we do something then delete it
 			for (ObjectOnGround obj : objectsToCollide) {
-				if (obj != null
-						&& Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
+				if (obj != null && Physics.rectangleCollision(getPosition(), getSize(), obj.getPosition(), obj.getSize())) {
 					if (getMoney() >= 10) {
 						if (obj.getImagePath() == "images/hp_up.png") {
 							this.life = HeroInfos.MAX_UP_LIFE;

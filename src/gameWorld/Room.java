@@ -332,13 +332,13 @@ public class Room {
 
 	
 	/** 
-	 * Génère un donjon à partir de salles, d'une salle de boss et d'un heros
+	 * Génère un donjon à partir d'un tableau de salles, d'une salle de boss et d'un heros
+	 * L'ordre est le même que dans le tableau
 	 * @param rooms
 	 * @param bossRoom
 	 * @param hero
 	 * @return Room
 	 */
-	// Création d'un donjon avec des salles aléatoires
 	public static Room createDungeon(Room[] rooms, BossRoom bossRoom, Hero hero) {
 		Room result = new StartRoom(hero);
 
